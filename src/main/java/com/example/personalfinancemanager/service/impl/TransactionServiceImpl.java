@@ -1,0 +1,58 @@
+package com.example.personalfinancemanager.service.impl;
+
+import com.example.personalfinancemanager.model.Transaction;
+import com.example.personalfinancemanager.repository.TransactionRepository;
+import com.example.personalfinancemanager.service.TransactionService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class TransactionServiceImpl implements TransactionService {
+    private final TransactionRepository transactionRepository;
+
+    @Autowired
+    public TransactionServiceImpl(TransactionRepository transactionRepository) {
+        this.transactionRepository = transactionRepository;
+    }
+
+    @Override
+    public void createTransaction(Transaction transaction) {
+        transactionRepository.save(transaction);
+    }
+
+    @Override
+    public List<Transaction> getAllTransactions() {
+        return (List<Transaction>) transactionRepository.findAll();
+    }
+
+    @Override
+    public Optional<Transaction> getTransactionById(Long id) {
+        return transactionRepository.findById(id);
+    }
+
+    @Override
+    public void updateTransactionById(long id, Transaction newTransaction) {
+        Optional<Transaction> transaction = transactionRepository.findById(id);
+
+        if (transaction.isPresent()) {
+            transaction.get().setCategory(newTransaction.getCategory());
+            transaction.get().setOperationType(newTransaction.getOperationType());
+            transaction.get().setSum(newTransaction.getSum());
+            transaction.get().setDate(newTransaction.getDate());
+            transaction.get().setTag(newTransaction.getTag());
+        }
+    }
+
+    @Override
+    public void deleteTransactionById(Long id) {
+        transactionRepository.deleteById(id);
+    }
+
+    @Override
+    public void deleteAllTransactions() {
+        transactionRepository.deleteAll();
+    }
+}
