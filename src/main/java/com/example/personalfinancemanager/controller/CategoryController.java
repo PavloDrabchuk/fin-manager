@@ -17,9 +17,12 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
-    @GetMapping
+    @GetMapping(path="/")
     public String getAllCategories(Model model){
         model.addAttribute("categories",categoryService.getAllCategories());
+        System.out.println("categories");
         return "categories";
     }
+
+
 }

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Categories</title>
+</head>
+<body>
+<h2>Categories</h2>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>#</th>
+        <th>Назва</th>
+        <th>Опис</th>
+        <th>Керування</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    <tr th:each="category, state : ${categories}">
+        <td th:text="${state.index+1}">1</td>
+        <td th:text="${category.name}">Назва категорії</td>
+        <td th:text="${category.description}">Опис категорії</td>
+        <td>crud</td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
