@@ -34,7 +34,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public void updateCategoryById(long id, Category newCategory) {
+    public boolean updateCategoryById(long id, Category newCategory) {
         Optional<Category> category = categoryRepository.findById(id);
 
         if (category.isPresent()) {
@@ -42,7 +42,9 @@ public class CategoryServiceImpl implements CategoryService {
             category.get().setDescription(newCategory.getDescription());
 
             categoryRepository.save(category.get());
+            return true;
         }
+        return false;
     }
 
     @Override

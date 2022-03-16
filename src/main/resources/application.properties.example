@@ -4,4 +4,6 @@ spring.datasource.password=<your-database-password>
 
 spring.jpa.open-in-view=false
 
+spring.mvc.hiddenmethod.filter.enabled = true
+
 

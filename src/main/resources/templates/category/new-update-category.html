@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<h3 th:text="${updateCategory} ? 'Оновлення категорії' : 'Створення категорії'"></h3>
+
+<form action="#"
+      th:action="${updateCategory} ? ('/categories/' + ${category.id} + '/update') : '/categories/new'"
+      th:object="${category}"
+      th:method="${updateCategory} ? 'put' : 'post'">
+
+    <label>Назва категорії
+        <input type="text" th:field="*{name}">
+        <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</p>
+    </label>
+    <label>Опис категорії
+        <input type="text" th:field="*{description}">
+        <p th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Description Error</p>
+    </label>
+    <input type="submit">
+    <input type="reset">
+</form>
+
+</body>
+</html>
