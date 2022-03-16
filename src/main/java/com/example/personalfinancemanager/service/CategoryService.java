@@ -13,7 +13,7 @@ public interface CategoryService {
 
     public Optional<Category> getCategoryById(Long id);
 
-    public void updateCategoryById(long id, Category newCategory);
+    public boolean updateCategoryById(long id, Category newCategory);
 
     public void deleteCategoryById(Long id);
 
