@@ -5,9 +5,11 @@ import com.example.personalfinancemanager.service.impl.CategoryServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.validation.Valid;
 import java.util.Optional;
 
 @Controller
@@ -33,7 +35,13 @@ public class CategoryController {
     }
 
     @PostMapping(path = "/new")
-    public String categorySubmit(@ModelAttribute Category category, RedirectAttributes redirectAttributes) {
+    public String categorySubmit(@Valid @ModelAttribute Category category,
+                                 BindingResult bindingResult,
+                                 RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            return "category/new-update-category";
+        }
+
         categoryService.createCategory(category);
 
         redirectAttributes.addFlashAttribute("successCategorySubmitMessage", "Категорію додано");
@@ -59,8 +67,18 @@ public class CategoryController {
 
     @PutMapping(path = "{id}/update")
     public String updateCategory(@PathVariable("id") Long id,
-                                 @ModelAttribute Category category,
+                                 Model model,
+                                 @Valid @ModelAttribute Category category,
+                                 BindingResult bindingResult,
                                  RedirectAttributes redirectAttributes) {
+
+
+        if (bindingResult.hasErrors()) {
+            category.setId(id);
+            model.addAttribute("category", category);
+            model.addAttribute("updateCategory", true);
+            return "category/new-update-category";
+        }
 
         if (categoryService.updateCategoryById(id, category)) {
             redirectAttributes.addFlashAttribute("successCategoryUpdateMessage", "Категорію оновлено");
@@ -84,6 +102,4 @@ public class CategoryController {
 
         return "redirect:/categories";
     }
-
-
 }
