@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<h3 th:text="${updateTransaction} ? 'Оновлення транзакції' : 'Створення транзакції'"></h3>
+
+<form action="#"
+      th:action="${updateTransaction} ? ('/transactions/' + ${transaction.id} + '/update') : '/transactions/new'"
+      th:object="${transaction}"
+      th:method="${updateTransaction} ? 'put' : 'post'">
+
+    <label>Назва категорії
+        <select th:field="*{category}">
+            <option th:each="c : ${categories}" th:name="${c.name}"
+                    th:value="${c.id}" th:text="${c.name}"></option>
+        </select>
+        <p th:if="${#fields.hasErrors('category')}" th:errors="*{category}">Category Error</p>
+    </label>
+    <label>Тип операції
+        <select th:field="*{operationType}">
+            <option th:each="ot : ${operationTypes}" th:name="${ot}"
+                    th:value="${ot}" th:utext="${ot.name}"></option>
+        </select>
+        <p th:if="${#fields.hasErrors('operationType')}" th:errors="*{operationType}">Operation Type Error</p>
+    </label>
+    <label>Сума
+        <input type="number" th:field="*{sum}">
+        <p th:if="${#fields.hasErrors('sum')}" th:errors="*{sum}">Sum Error</p>
+    </label>
+    <label>Короткий опис
+        <input type="text" th:field="*{description}">
+        <p th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Description Error</p>
+    </label>
+    <label>Дата
+        <input type="date" th:field="*{date}">
+        <p th:if="${#fields.hasErrors('date')}" th:errors="*{date}">Date Error</p>
+    </label>
+    <input type="submit">
+    <input type="reset">
+</form>
+
+</body>
+</html>

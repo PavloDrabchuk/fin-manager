@@ -7,15 +7,15 @@ import java.util.Optional;
 
 public interface CategoryService {
 
-    public void createCategory(Category category);
+    void createCategory(Category category);
 
-    public List<Category> getAllCategories();
+    List<Category> getAllCategories();
 
-    public Optional<Category> getCategoryById(Long id);
+    Optional<Category> getCategoryById(Long id);
 
-    public boolean updateCategoryById(long id, Category newCategory);
+    boolean updateCategoryById(long id, Category newCategory);
 
-    public void deleteCategoryById(Long id);
+    void deleteCategoryById(Long id);
 
-    public void deleteAllCategories();
+    void deleteAllCategories();
 }

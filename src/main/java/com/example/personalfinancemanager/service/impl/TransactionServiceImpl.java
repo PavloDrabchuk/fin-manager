@@ -34,16 +34,21 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public void updateTransactionById(long id, Transaction newTransaction) {
+    public boolean updateTransactionById(long id, Transaction newTransaction) {
         Optional<Transaction> transaction = transactionRepository.findById(id);
 
         if (transaction.isPresent()) {
             transaction.get().setCategory(newTransaction.getCategory());
             transaction.get().setOperationType(newTransaction.getOperationType());
             transaction.get().setSum(newTransaction.getSum());
+            transaction.get().setDescription(newTransaction.getDescription());
             transaction.get().setDate(newTransaction.getDate());
             transaction.get().setTag(newTransaction.getTag());
+
+            transactionRepository.save(transaction.get());
+            return true;
         }
+        return false;
     }
 
     @Override

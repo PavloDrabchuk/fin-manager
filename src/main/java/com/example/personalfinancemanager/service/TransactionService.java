@@ -6,15 +6,16 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TransactionService {
-    public void createTransaction(Transaction transaction);
 
-    public List<Transaction> getAllTransactions();
+    void createTransaction(Transaction transaction);
 
-    public Optional<Transaction> getTransactionById(Long id);
+    List<Transaction> getAllTransactions();
 
-    public void updateTransactionById(long id, Transaction newTransaction);
+    Optional<Transaction> getTransactionById(Long id);
 
-    public void deleteTransactionById(Long id);
+    boolean updateTransactionById(long id, Transaction newTransaction);
 
-    public void deleteAllTransactions();
+    void deleteTransactionById(Long id);
+
+    void deleteAllTransactions();
 }

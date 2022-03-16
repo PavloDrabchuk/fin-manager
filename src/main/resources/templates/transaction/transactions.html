@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<h2>Transactions</h2>
+
+<!--/*@thymesVar id="successTransactionSubmitMessage" type="java.lang.String"*/-->
+<p th:if="${successTransactionSubmitMessage}" th:utext="${successTransactionSubmitMessage}">alert</p>
+
+<!--/*@thymesVar id="successTransactionDeleteMessage" type="java.lang.String"*/-->
+<p th:if="${successTransactionDeleteMessage}" th:utext="${successTransactionDeleteMessage}">alert</p>
+
+<!--/*@thymesVar id="successTransactionUpdateMessage" type="java.lang.String"*/-->
+<p th:if="${successTransactionUpdateMessage}" th:utext="${successTransactionUpdateMessage}">alert</p>
+
+<!--/*@thymesVar id="failureTransactionMessage" type="java.lang.String"*/-->
+<p th:if="${failureTransactionMessage}" th:utext="${failureTransactionMessage}">alert</p>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>#</th>
+        <th>Категорія</th>
+        <th>Тип операції</th>
+        <th>Сума</th>
+        <th>Дата</th>
+        <th>Опис</th>
+        <th>Керування</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    <tr th:each="transaction, state : ${transactions}">
+        <td th:text="${state.index + 1}">1</td>
+        <td th:text="${transaction.category.name}">Категорія</td>
+        <td th:text="${transaction.operationType.name}">Тип операції</td>
+        <td th:text="${transaction.sum}">Сума</td>
+        <td th:text="${transaction.date}">Дата</td>
+        <td th:text="${transaction.description}">Опис</td>
+        <td>
+            <a th:href="${'/transactions/' + transaction.id + '/update'}">Редагувати</a>
+
+            <form th:action="${'/transactions/' + transaction.id + '/delete'}" th:method="delete">
+
+                <button type="submit" title="Видалити">Видалити</button>
+            </form>
+
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<a th:href="@{/transactions/new}">Додати нову транзакцію</a>
+
+
+</body>
+</html>

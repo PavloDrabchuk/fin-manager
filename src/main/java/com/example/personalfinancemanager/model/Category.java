@@ -1,6 +1,5 @@
 package com.example.personalfinancemanager.model;
 
-
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -17,7 +16,7 @@ public class Category {
     @Column(length = 50, nullable = false, unique = true)
     @NotBlank(message = "Введіть назву категорії")
     @NotNull
-    @Size(min = 2,max = 50)
+    @Size(min = 2, max = 50)
     private String name;
 
     private String description;

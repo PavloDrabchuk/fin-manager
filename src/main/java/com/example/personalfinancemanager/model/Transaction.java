@@ -1,8 +1,14 @@
 package com.example.personalfinancemanager.model;
 
 import com.example.personalfinancemanager.enums.OperationType;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
@@ -13,16 +19,29 @@ public class Transaction {
     @Column(nullable = false)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @NotNull
     private Category category;
 
     @Column(nullable = false)
+    @NotNull
     private OperationType operationType;
 
     @Column(nullable = false)
+    @NotNull(message = "Введіть суму")
+    @Min(0)
     private Double sum;
 
     @Column(nullable = false)
+    @NotBlank(message = "Введіть опис транзакції")
+    @NotNull
+    private String description;
+
+    @Column(nullable = false)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Temporal(TemporalType.DATE)
+    @NotNull(message = "Введіть дату")
     private Date date;
 
     @Column(length = 100)
@@ -31,12 +50,21 @@ public class Transaction {
     public Transaction() {
     }
 
-    public Transaction(Category category, OperationType operationType, Double sum, Date date, String tag) {
+    public Transaction(Category category, OperationType operationType, Double sum, String description, Date date, String tag) {
         this.category = category;
         this.operationType = operationType;
         this.sum = sum;
+        this.description = description;
         this.date = date;
         this.tag = tag;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Category getCategory() {
@@ -61,6 +89,14 @@ public class Transaction {
 
     public void setSum(Double sum) {
         this.sum = sum;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Date getDate() {
