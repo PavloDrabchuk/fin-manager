@@ -50,6 +50,18 @@
 </table>
 
 <a th:href="@{/categories/new}">Додати нову категорію</a>
+<br>
 
+<div th:if="${categories.getTotalPages() > 1}">
+    <a th:href="${'/categories?page='+(page - 1)}" th:if="${categories.hasPrevious()}">Попередня</a>
+    <a th:href="${'/categories?page=0'}" th:if="${page!=0}">1</a>
+    <!-- ... -->
+    <a th:href="${'/categories?page='+(page)}" th:text="${page+1}"></a>
+    <!-- ... -->
+    <a th:href="${'/categories?page='+(categories.totalPages - 1)}"
+       th:text="${categories.totalPages}"
+       th:if="${page != categories.totalPages - 1}"></a>
+    <a th:href="${'/categories?page='+(page+1)}" th:if="${categories.hasNext()}">Наступна</a>
+</div>
 </body>
 </html>

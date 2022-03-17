@@ -4,14 +4,19 @@ import com.example.personalfinancemanager.model.Category;
 import com.example.personalfinancemanager.repository.CategoryRepository;
 import com.example.personalfinancemanager.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
+    private final Integer PAGE_SIZE_PAGINATION = 3;
 
     @Autowired
     public CategoryServiceImpl(CategoryRepository categoryRepository) {
@@ -26,6 +31,15 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public List<Category> getAllCategories() {
         return (List<Category>) categoryRepository.findAll();
+    }
+
+    @Override
+    public Page<Category> getAllCategoriesForPage(Integer pageNo) {
+        if (pageNo < 0) pageNo = 0;
+
+        Pageable paging = PageRequest.of(pageNo, PAGE_SIZE_PAGINATION);
+
+        return categoryRepository.findAll(paging);
     }
 
     @Override

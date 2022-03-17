@@ -30,7 +30,7 @@
         <p th:if="${#fields.hasErrors('operationType')}" th:errors="*{operationType}">Operation Type Error</p>
     </label>
     <label>Сума
-        <input type="number" th:field="*{sum}">
+        <input type="number" th:field="*{sum}" min="0" step="0.01">
         <p th:if="${#fields.hasErrors('sum')}" th:errors="*{sum}">Sum Error</p>
     </label>
     <label>Короткий опис

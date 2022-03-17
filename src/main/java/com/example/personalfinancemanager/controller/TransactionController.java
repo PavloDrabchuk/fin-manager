@@ -29,8 +29,12 @@ public class TransactionController {
     }
 
     @GetMapping
-    public String getAllTransactions(Model model) {
-        model.addAttribute("transactions", transactionService.getAllTransactions());
+    public String getAllTransactions(Model model,
+                                     @RequestParam(defaultValue = "0") Integer page,
+                                     @RequestParam(defaultValue = "id") String sortBy) {
+        model.addAttribute("transactions", transactionService.getAllTransactionsForPage(page));
+        model.addAttribute("page", page);
+
         return "transaction/transactions";
     }
 

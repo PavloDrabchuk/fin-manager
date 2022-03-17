@@ -1,9 +1,13 @@
 package com.example.personalfinancemanager.service.impl;
 
+import com.example.personalfinancemanager.model.Category;
 import com.example.personalfinancemanager.model.Transaction;
 import com.example.personalfinancemanager.repository.TransactionRepository;
 import com.example.personalfinancemanager.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,6 +16,7 @@ import java.util.Optional;
 @Service
 public class TransactionServiceImpl implements TransactionService {
     private final TransactionRepository transactionRepository;
+    private final Integer PAGE_SIZE_PAGINATION = 3;
 
     @Autowired
     public TransactionServiceImpl(TransactionRepository transactionRepository) {
@@ -27,6 +32,16 @@ public class TransactionServiceImpl implements TransactionService {
     public List<Transaction> getAllTransactions() {
         return (List<Transaction>) transactionRepository.findAll();
     }
+
+    @Override
+    public Page<Transaction> getAllTransactionsForPage(Integer pageNo) {
+        if (pageNo < 0) pageNo = 0;
+
+        Pageable paging = PageRequest.of(pageNo, PAGE_SIZE_PAGINATION);
+
+        return transactionRepository.findAll(paging);
+    }
+
 
     @Override
     public Optional<Transaction> getTransactionById(Long id) {

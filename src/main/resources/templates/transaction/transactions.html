@@ -58,6 +58,17 @@
 
 <a th:href="@{/transactions/new}">Додати нову транзакцію</a>
 
-
+<br>
+<div th:if="${transactions.getTotalPages() > 1}">
+    <a th:href="${'/transactions?page='+(page - 1)}" th:if="${transactions.hasPrevious()}">Попередня</a>
+    <a th:href="${'/transactions?page=0'}" th:if="${page!=0}">1</a>
+    <!-- ... -->
+    <a th:href="${'/transactions?page='+(page)}" th:text="${page+1}"></a>
+    <!-- ... -->
+    <a th:href="${'/transactions?page='+(transactions.totalPages - 1)}"
+       th:text="${transactions.totalPages}"
+       th:if="${page != transactions.totalPages - 1}"></a>
+    <a th:href="${'/transactions?page='+(page+1)}" th:if="${transactions.hasNext()}">Наступна</a>
+</div>
 </body>
 </html>
