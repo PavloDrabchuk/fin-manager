@@ -1,5 +1,6 @@
 package com.example.personalfinancemanager.service.impl;
 
+import com.example.personalfinancemanager.enums.OperationType;
 import com.example.personalfinancemanager.model.Category;
 import com.example.personalfinancemanager.model.Transaction;
 import com.example.personalfinancemanager.repository.TransactionRepository;
@@ -10,6 +11,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
