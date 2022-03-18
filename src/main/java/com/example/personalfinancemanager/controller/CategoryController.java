@@ -23,8 +23,12 @@ public class CategoryController {
     }
 
     @GetMapping
-    public String getAllCategories(Model model) {
-        model.addAttribute("categories", categoryService.getAllCategories());
+    public String getAllCategories(Model model,
+                                   @RequestParam(defaultValue = "0") Integer page,
+                                   @RequestParam(defaultValue = "id") String sortBy) {
+        model.addAttribute("categories", categoryService.getAllCategoriesForPage(page));
+        model.addAttribute("page", page);
+
         return "category/categories";
     }
 

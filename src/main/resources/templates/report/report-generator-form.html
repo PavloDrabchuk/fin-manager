@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<!--/*@thymesVar id="failureReportMessage" type="java.lang.String"*/-->
+<p th:if="${failureReportMessage}" th:utext="${failureReportMessage}">alert</p>
+
+<h2>Генератор звітів</h2>
+
+<form th:action="@{/transactions/report/view}" method="post">
+    <label>Дата початку:
+        <input type="date" name="dateFrom">
+    </label>
+
+    <label>Дата завершення:
+        <input type="date" name="dateTo">
+    </label>
+
+    <label>Тип операції
+        <select name="operationType">
+            <option th:each="ot : ${operationTypes}" th:name="${ot}"
+                    th:value="${ot}" th:utext="${ot.name}"></option>
+        </select>
+    </label>
+
+    <label>Категорія
+        <select>
+            <option th:each="c : ${categories}" th:name="${c.name}"
+                    th:value="${c.id}" th:text="${c.name}"></option>
+        </select>
+    </label>
+
+    <button type="submit" value="ByCategories" name="reportType" th:text="${'По категоріях'}"></button>
+    <button type="submit" value="ByDay" name="reportType" th:text="${'По днях'}"></button>
+
+    <br>
+
+    <input type="reset">
+
+</form>
+
+</body>
+</html>
