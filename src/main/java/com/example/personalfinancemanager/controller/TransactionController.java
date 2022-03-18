@@ -146,6 +146,10 @@ public class TransactionController {
                                  RedirectAttributes redirectAttributes) throws ParseException {
 
         model.addAttribute("reportType", reportType);
+        model.addAttribute("dateFrom", dateFrom);
+        model.addAttribute("dateTo", dateTo);
+        model.addAttribute("operationType", operationType);
+
         switch (reportType) {
             case "ByDay" -> {
                 model.addAttribute("reportDayByDay", transactionService.generateDayByDayReport(operationType, dateFrom, dateTo));

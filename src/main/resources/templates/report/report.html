@@ -10,6 +10,8 @@
 
 <h2>Report</h2>
 <h4 th:text="${reportType}"></h4>
+<h3 th:text="${'Звіт за період з ' + dateFrom + ' по ' + dateTo + '.'}"></h3>
+<h4 th:text="${'Тип звіту: ' + operationType.name}"></h4>
 
 <div th:if="${reportType == 'ByCategories'}">
     <p>Звіт по категоріях</p>
