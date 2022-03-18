@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<h2>Report</h2>
+<h4 th:text="${reportType}"></h4>
+
+<div th:if="${reportType == 'ByCategories'}">
+    <p>Звіт по категоріях</p>
+    <table border="1">
+        <thead>
+        <tr>
+            <th>№</th>
+            <th>Категорія</th>
+            <th>Сума</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="reportElement, state : ${reportByCategories}">
+            <td th:text="${state.index+1}">1</td>
+
+            <td th:text="${reportElement.category.name}">Категорія</td>
+            <td th:text="${reportElement.totalSum}">Сума</td>
+
+        </tr>
+        <tr>
+            <td colspan="3" th:text="${'Всього: '+totalSum+' грн.'}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div th:if="${reportType == 'ByDay'}">
+    <p>Звіт по днях</p>
+
+    <table border="1">
+        <thead>
+        <tr>
+            <th>№</th>
+            <th>Дата</th>
+            <th>Сума</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="reportElement1, state : ${reportDayByDay}">
+            <td th:text="${state.index+1}">1</td>
+
+            <td th:text="${reportElement1.date}">Дата</td>
+            <td th:text="${reportElement1.totalSum}">Сума</td>
+
+        </tr>
+
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

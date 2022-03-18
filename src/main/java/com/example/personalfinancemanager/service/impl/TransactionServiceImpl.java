@@ -1,7 +1,8 @@
 package com.example.personalfinancemanager.service.impl;
 
+import com.example.personalfinancemanager.dto.ReportByCategoriesDTO;
+import com.example.personalfinancemanager.dto.ReportDayByDayDTO;
 import com.example.personalfinancemanager.enums.OperationType;
-import com.example.personalfinancemanager.model.Category;
 import com.example.personalfinancemanager.model.Transaction;
 import com.example.personalfinancemanager.repository.TransactionRepository;
 import com.example.personalfinancemanager.service.TransactionService;
@@ -11,8 +12,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,6 +21,7 @@ import java.util.Optional;
 public class TransactionServiceImpl implements TransactionService {
     private final TransactionRepository transactionRepository;
     private final Integer PAGE_SIZE_PAGINATION = 3;
+    private final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
     @Autowired
     public TransactionServiceImpl(TransactionRepository transactionRepository) {
@@ -77,5 +79,20 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public void deleteAllTransactions() {
         transactionRepository.deleteAll();
+    }
+
+    @Override
+    public List<ReportDayByDayDTO> generateDayByDayReport(OperationType operationType, String from, String to) throws ParseException {
+        return transactionRepository.totalSumDayByDay(operationType, formatter.parse(from), formatter.parse(to));
+    }
+
+    @Override
+    public List<ReportByCategoriesDTO> generateReportByCategories(OperationType operationType, String from, String to) throws ParseException {
+        return transactionRepository.totalSumByCategories(operationType, formatter.parse(from), formatter.parse(to));
+    }
+
+    @Override
+    public Double getTotalSumBetweenDays(OperationType operationType, String from, String to) throws ParseException {
+        return transactionRepository.totalSumBetweenDays(operationType, formatter.parse(from), formatter.parse(to));
     }
 }

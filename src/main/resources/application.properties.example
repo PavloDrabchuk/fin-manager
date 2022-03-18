@@ -2,6 +2,8 @@ spring.datasource.url=<your-datasource-url>
 spring.datasource.username=<your-database-username>
 spring.datasource.password=<your-database-password>
 
+# spring.jpa.hibernate.ddl-auto=create
+
 spring.jpa.open-in-view=false
 
 spring.mvc.hiddenmethod.filter.enabled = true
