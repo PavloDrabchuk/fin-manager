@@ -70,4 +70,9 @@ public class CategoryServiceImpl implements CategoryService {
     public void deleteAllCategories() {
         categoryRepository.deleteAll();
     }
+
+    @Override
+    public List<String> getAllCategoriesNames() {
+        return categoryRepository.findAllNames();
+    }
 }

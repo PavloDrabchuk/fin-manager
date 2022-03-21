@@ -3,63 +3,220 @@
       xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" media="all" href="../../static/styles/main.css"
+          th:href="@{/styles/main.css}">
+
+    <title>Звіт</title>
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" th:inline="javascript">
+        google.charts.load('current', {'packages': ['corechart']});
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+
+            const dataTitle = ["Категорія", "Сума"];
+            const reportByCategories = /*[[${reportByCategories}]]*/ null;
+
+            const dataReport = [dataTitle];
+            for (let i = 0; i < reportByCategories.length; i++) {
+                dataReport.push([reportByCategories[i].category.name, reportByCategories[i].totalSum])
+            }
+
+            const data = google.visualization.arrayToDataTable(dataReport);
+
+            const options = {
+                title: 'Розподіл витрат за період',
+                titleTextStyle: {
+                    // color: <string>,
+                    fontName: 'Segoe UI',
+                    fontSize: 20,
+                    bold: true,
+                    italic: false
+                },
+                chartArea: {left: 0, top: 30, 'width': '100%', 'height': '100%'}
+            };
+
+            const chart = new google.visualization.PieChart(document.getElementById('piechart'));
+
+            chart.draw(data, options);
+        }
+    </script>
+
+    <script type="text/javascript" th:inline="javascript">
+        google.charts.load('current', {'packages': ['corechart']});
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+            const reportDayByDay = /*[[${reportDayByDay}]]*/ null;
+
+            const dataReport = []
+            for (var i = 0; i < reportDayByDay.length; i++) {
+                dataReport.push([new Date(reportDayByDay[i].date), reportDayByDay[i].totalSum])
+            }
+
+            var data = new google.visualization.DataTable();
+            data.addColumn('date', 'Дата');
+            data.addColumn('number', 'Сума');
+
+            data.addRows(dataReport);
+
+            var formatter_short = new google.visualization.DateFormat({pattern: "dd.MM.yyyy"});
+
+            // Reformat our data.
+            formatter_short.format(data, 0);
+
+            var options = {
+                title: 'Розподіл витрат за період по датах',
+                titleTextStyle: {
+                    // color: <string>,
+                    fontName: 'Segoe UI',
+                    fontSize: 24,
+                    bold: true,
+                    italic: false
+                },
+                width: 900,
+                height: 500,
+                hAxis: {
+                    format: 'dd.MM.yyyy',
+                    gridlines: {count: 15},
+                    title: 'Дата',
+                    titleTextStyle: {
+                        // color: <string>,
+                        fontName: 'Segoe UI',
+                        fontSize: 16,
+                        bold: true,
+                        italic: false
+                    }
+                },
+                vAxis: {
+                    minValue: 0,
+                    title: 'Сума',
+                    titleTextStyle: {
+                        // color: <string>,
+                        fontName: 'Segoe UI',
+                        fontSize: 16,
+                        bold: true,
+                        italic: false
+                    }
+                },
+                pointSize: 4,
+                legend: {
+                    textStyle: {
+                        // color: <string>,
+                        fontName: 'Segoe UI',
+                        fontSize: 16,
+                        bold: true,
+                        italic: false
+                    }
+                }
+            };
+
+            var chart = new google.visualization.LineChart(document.getElementById('day_by_day_report_chart'));
+
+            chart.draw(data, options);
+        }
+    </script>
+
 </head>
 <body>
 
-<h2>Report</h2>
-<h4 th:text="${reportType}"></h4>
-<h3 th:text="${'Звіт за період з ' + dateFrom + ' по ' + dateTo + '.'}"></h3>
-<h4 th:text="${'Тип звіту: ' + operationType.name}"></h4>
+<!-- Navbar-->
+<div th:replace="fragments/navbar :: navbar"></div>
 
-<div th:if="${reportType == 'ByCategories'}">
-    <p>Звіт по категоріях</p>
-    <table border="1">
-        <thead>
-        <tr>
-            <th>№</th>
-            <th>Категорія</th>
-            <th>Сума</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="reportElement, state : ${reportByCategories}">
-            <td th:text="${state.index+1}">1</td>
-
-            <td th:text="${reportElement.category.name}">Категорія</td>
-            <td th:text="${reportElement.totalSum}">Сума</td>
-
-        </tr>
-        <tr>
-            <td colspan="3" th:text="${'Всього: '+totalSum+' грн.'}"></td>
-        </tr>
-        </tbody>
-    </table>
+<div class="mx-5 my-3 text-center">
+    <h3 th:text="${'Звіт за період з ' + dateFrom + ' по ' + dateTo}">Звіт за період з 2022-01-01 по 2022-02-01</h3>
+    <h5 th:text="${'Тип операції для формування звіту: ' + operationType.name}">Дохід/Витрата</h5>
 </div>
-<div th:if="${reportType == 'ByDay'}">
-    <p>Звіт по днях</p>
 
-    <table border="1">
-        <thead>
-        <tr>
-            <th>№</th>
-            <th>Дата</th>
-            <th>Сума</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="reportElement1, state : ${reportDayByDay}">
-            <td th:text="${state.index+1}">1</td>
+<div th:if="${#lists.isEmpty(reportByCategories) and #lists.isEmpty(reportDayByDay)}" class="p-4">
+    <div class="col-xl-8 offset-xl-2 col-lg-10 offset-lg-1 col-md-8 offset-md-2 col-sm-12 mb-3">
+        <div class="alert alert-success" role="alert">
+            <h4 class="alert-heading text-center">Даних за обраний період не знайдено</h4>
+            <p class="text-center">
+                За вказаний Вами період транзакцій не знайдено. Спробуйте обрати інший період часу.
+            </p>
+            <hr>
+            <p class="mb-0 text-center">
+                <a th:href="@{/transactions/report}" class="alert-link">Повернутись до генератора звітів</a>
+            </p>
 
-            <td th:text="${reportElement1.date}">Дата</td>
-            <td th:text="${reportElement1.totalSum}">Сума</td>
-
-        </tr>
-
-        </tbody>
-    </table>
+        </div>
+    </div>
 </div>
+
+<div th:if="${not #lists.isEmpty(reportByCategories) or not #lists.isEmpty(reportDayByDay)}">
+
+    <div th:if="${reportType == 'ByCategories'}">
+        <h4 class="mx-5 my-3 text-center">Звіт по категоріях</h4>
+
+        <div class="container">
+            <div class="row">
+                <div class="col">
+
+                    <div class="col-lg-12  my-3">
+                        <div class="card mb-3">
+                            <div class="card-body">
+
+                                <table class="table table-striped table-hover table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Категорія</th>
+                                        <th scope="col">Сума</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="reportElement, state : ${reportByCategories}" class="align-middle">
+                                        <th scope="row" th:utext="${state.index + 1}">1</th>
+                                        <td scope="col" th:utext="${reportElement.category.name}">Категорія</td>
+                                        <td scope="col" th:utext="${reportElement.totalSum}">Сума</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td colspan="3" class="table-success"
+                                            th:text="${'Всього: ' + totalSum + ' грн.'}"></td>
+                                    </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="col-lg-12  my-3">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-center">
+                                    <div id="piechart" style="width: 460px; height: 380px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div th:if="${reportType == 'ByDay'}">
+        <h4 class="mx-5 my-3 text-center">Звіт по днях</h4>
+
+        <div class="d-flex justify-content-center mt-5 mb-1">
+            <div id="day_by_day_report_chart" style="width: 900px; height: 500px;"></div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Bootstrap Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>

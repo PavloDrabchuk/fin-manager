@@ -21,4 +21,6 @@ public interface CategoryService {
     void deleteCategoryById(Long id);
 
     void deleteAllCategories();
+
+    List<String> getAllCategoriesNames();
 }

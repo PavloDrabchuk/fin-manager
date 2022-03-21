@@ -41,8 +41,15 @@ public class CategoryController {
     @PostMapping(path = "/new")
     public String categorySubmit(@Valid @ModelAttribute Category category,
                                  BindingResult bindingResult,
-                                 RedirectAttributes redirectAttributes) {
+                                 RedirectAttributes redirectAttributes,
+                                 Model model) {
+
         if (bindingResult.hasErrors()) {
+            return "category/new-update-category";
+        }
+
+        if (categoryService.getAllCategoriesNames().contains(category.getName())) {
+            model.addAttribute("nameAlreadyExistError", "Дана категорія вже існує");
             return "category/new-update-category";
         }
 
@@ -94,7 +101,8 @@ public class CategoryController {
 
 
     @DeleteMapping(path = "{id}/delete")
-    public String deleteCategory(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
+    public String deleteCategory(@PathVariable("id") Long id,
+                                 RedirectAttributes redirectAttributes) {
         Optional<Category> category = categoryService.getCategoryById(id);
 
         if (category.isPresent()) {

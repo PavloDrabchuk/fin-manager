@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+<!--/*@thymesVar id="message" type="java.lang.String"*/-->
+<!--/*@thymesVar id="type" type="java.lang.String"*/-->
+<div th:fragment="alert(message, type)">
+    <div th:class="${'alert m-3 ' + type}" role="alert"
+         th:if="${message}" th:utext="${message}">
+        message
+    </div>
+</div>
+
+</body>
+</html>
