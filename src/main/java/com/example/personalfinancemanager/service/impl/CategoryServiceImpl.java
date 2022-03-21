@@ -16,7 +16,7 @@ import java.util.Optional;
 @Service
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
-    private final Integer PAGE_SIZE_PAGINATION = 3;
+    private final Integer PAGE_SIZE_PAGINATION = 7;
 
     @Autowired
     public CategoryServiceImpl(CategoryRepository categoryRepository) {
@@ -35,8 +35,6 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Page<Category> getAllCategoriesForPage(Integer pageNo) {
-        if (pageNo < 0) pageNo = 0;
-
         Pageable paging = PageRequest.of(pageNo, PAGE_SIZE_PAGINATION);
 
         return categoryRepository.findAll(paging);
@@ -69,5 +67,10 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public void deleteAllCategories() {
         categoryRepository.deleteAll();
+    }
+
+    @Override
+    public List<String> getAllCategoriesNames() {
+        return categoryRepository.findAllNames();
     }
 }
