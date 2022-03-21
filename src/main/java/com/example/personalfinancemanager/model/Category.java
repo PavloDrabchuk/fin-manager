@@ -18,7 +18,7 @@ public class Category {
     @Column(length = 50, nullable = false, unique = true)
     @NotBlank(message = "Введіть назву категорії")
     @NotNull
-    @Size(min = 2, max = 50)
+    @Size(min = 2, max = 50, message = "Розмір має бути між 2 та 50")
     private String name;
 
     private String description;
