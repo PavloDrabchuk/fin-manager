@@ -14,114 +14,6 @@
     <title>Звіт</title>
 
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript" th:inline="javascript">
-        google.charts.load('current', {'packages': ['corechart']});
-        google.charts.setOnLoadCallback(drawChart);
-
-        function drawChart() {
-
-            const dataTitle = ["Категорія", "Сума"];
-            const reportByCategories = /*[[${reportByCategories}]]*/ null;
-
-            const dataReport = [dataTitle];
-            for (let i = 0; i < reportByCategories.length; i++) {
-                dataReport.push([reportByCategories[i].category.name, reportByCategories[i].totalSum])
-            }
-
-            const data = google.visualization.arrayToDataTable(dataReport);
-
-            const options = {
-                title: 'Розподіл витрат за період',
-                titleTextStyle: {
-                    // color: <string>,
-                    fontName: 'Segoe UI',
-                    fontSize: 20,
-                    bold: true,
-                    italic: false
-                },
-                chartArea: {left: 0, top: 30, 'width': '100%', 'height': '100%'}
-            };
-
-            const chart = new google.visualization.PieChart(document.getElementById('piechart'));
-
-            chart.draw(data, options);
-        }
-    </script>
-
-    <script type="text/javascript" th:inline="javascript">
-        google.charts.load('current', {'packages': ['corechart']});
-        google.charts.setOnLoadCallback(drawChart);
-
-        function drawChart() {
-            const reportDayByDay = /*[[${reportDayByDay}]]*/ null;
-
-            const dataReport = []
-            for (var i = 0; i < reportDayByDay.length; i++) {
-                dataReport.push([new Date(reportDayByDay[i].date), reportDayByDay[i].totalSum])
-            }
-
-            var data = new google.visualization.DataTable();
-            data.addColumn('date', 'Дата');
-            data.addColumn('number', 'Сума');
-
-            data.addRows(dataReport);
-
-            var formatter_short = new google.visualization.DateFormat({pattern: "dd.MM.yyyy"});
-
-            // Reformat our data.
-            formatter_short.format(data, 0);
-
-            var options = {
-                title: 'Розподіл витрат за період по датах',
-                titleTextStyle: {
-                    // color: <string>,
-                    fontName: 'Segoe UI',
-                    fontSize: 24,
-                    bold: true,
-                    italic: false
-                },
-                width: 900,
-                height: 500,
-                hAxis: {
-                    format: 'dd.MM.yyyy',
-                    gridlines: {count: 15},
-                    title: 'Дата',
-                    titleTextStyle: {
-                        // color: <string>,
-                        fontName: 'Segoe UI',
-                        fontSize: 16,
-                        bold: true,
-                        italic: false
-                    }
-                },
-                vAxis: {
-                    minValue: 0,
-                    title: 'Сума',
-                    titleTextStyle: {
-                        // color: <string>,
-                        fontName: 'Segoe UI',
-                        fontSize: 16,
-                        bold: true,
-                        italic: false
-                    }
-                },
-                pointSize: 4,
-                legend: {
-                    textStyle: {
-                        // color: <string>,
-                        fontName: 'Segoe UI',
-                        fontSize: 16,
-                        bold: true,
-                        italic: false
-                    }
-                }
-            };
-
-            var chart = new google.visualization.LineChart(document.getElementById('day_by_day_report_chart'));
-
-            chart.draw(data, options);
-        }
-    </script>
 
 </head>
 <body>
@@ -153,6 +45,16 @@
 <div th:if="${not #lists.isEmpty(reportByCategories) or not #lists.isEmpty(reportDayByDay)}">
 
     <div th:if="${reportType == 'ByCategories'}">
+
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+            const reportByCategories = /*[[${reportByCategories}]]*/ [];
+            /*]]>*/
+        </script>
+
+        <script type="text/javascript" th:inline="javascript"
+                src="../../static/scripts/pie_chart.js" th:src="@{/scripts/pie_chart.js}"></script>
+
         <h4 class="mx-5 my-3 text-center">Звіт по категоріях</h4>
 
         <div class="container">
@@ -206,6 +108,16 @@
     </div>
 
     <div th:if="${reportType == 'ByDay'}">
+
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+            const reportDayByDay = /*[[${reportDayByDay}]]*/ [];
+            /*]]>*/
+        </script>
+
+        <script type="text/javascript" th:inline="javascript"
+                src="../../static/scripts/day_by_day_report_chart.js" th:src="@{/scripts/day_by_day_report_chart.js}"></script>
+
         <h4 class="mx-5 my-3 text-center">Звіт по днях</h4>
 
         <div class="d-flex justify-content-center mt-5 mb-1">

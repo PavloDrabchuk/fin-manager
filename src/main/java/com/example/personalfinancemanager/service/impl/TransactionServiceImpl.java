@@ -20,7 +20,7 @@ import java.util.Optional;
 @Service
 public class TransactionServiceImpl implements TransactionService {
     private final TransactionRepository transactionRepository;
-    private final Integer PAGE_SIZE_PAGINATION = 3;
+    private final Integer PAGE_SIZE_PAGINATION = 7;
     private final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
     @Autowired
@@ -40,13 +40,10 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public Page<Transaction> getAllTransactionsForPage(Integer pageNo) {
-        if (pageNo < 0) pageNo = 0;
-
         Pageable paging = PageRequest.of(pageNo, PAGE_SIZE_PAGINATION);
 
         return transactionRepository.findAll(paging);
     }
-
 
     @Override
     public Optional<Transaction> getTransactionById(Long id) {

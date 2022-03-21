@@ -1,8 +1,10 @@
 package com.example.personalfinancemanager.controller;
 
 import com.example.personalfinancemanager.model.Category;
+import com.example.personalfinancemanager.model.Transaction;
 import com.example.personalfinancemanager.service.impl.CategoryServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -26,6 +28,11 @@ public class CategoryController {
     public String getAllCategories(Model model,
                                    @RequestParam(defaultValue = "0") Integer page,
                                    @RequestParam(defaultValue = "id") String sortBy) {
+        if (page < 0) page = 0;
+
+        Page<Category> categoryPage = categoryService.getAllCategoriesForPage(page);
+        if (categoryPage.getTotalPages() < page) return "redirect:/categories";
+
         model.addAttribute("categories", categoryService.getAllCategoriesForPage(page));
         model.addAttribute("page", page);
 

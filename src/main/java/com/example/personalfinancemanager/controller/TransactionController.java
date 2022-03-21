@@ -7,6 +7,7 @@ import com.example.personalfinancemanager.model.Transaction;
 import com.example.personalfinancemanager.service.impl.CategoryServiceImpl;
 import com.example.personalfinancemanager.service.impl.TransactionServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.awt.print.Pageable;
 import java.text.ParseException;
 import java.util.Arrays;
 import java.util.List;
@@ -37,7 +39,12 @@ public class TransactionController {
     public String getAllTransactions(Model model,
                                      @RequestParam(defaultValue = "0") Integer page,
                                      @RequestParam(defaultValue = "id") String sortBy) {
-        model.addAttribute("transactions", transactionService.getAllTransactionsForPage(page));
+        if (page < 0) page = 0;
+
+        Page<Transaction> transactionPage = transactionService.getAllTransactionsForPage(page);
+        if (transactionPage.getTotalPages() < page) return "redirect:/transactions";
+
+        model.addAttribute("transactions", transactionPage);
         model.addAttribute("page", page);
 
         return "transaction/transactions";

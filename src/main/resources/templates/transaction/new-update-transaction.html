@@ -51,7 +51,7 @@
                     <select th:field="*{operationType}"
                             th:class="${(#fields.hasErrors('operationType') ? 'is-invalid ' : '') + 'form-control'}"
                             id="inputOperationType" aria-describedby="operationTypeError">
-                        <option value="" disabled selected hidden>Виберіть тип операції</option>
+                        <option value="" disabled hidden selected>Виберіть тип операції</option>
                         <option th:each="ot : ${operationTypes}" th:name="${ot}"
                                 th:value="${ot}" th:utext="${ot.name}"></option>
                     </select>
