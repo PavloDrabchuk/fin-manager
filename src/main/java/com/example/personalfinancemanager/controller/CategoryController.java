@@ -49,13 +49,17 @@ public class CategoryController {
         }
 
         if (categoryService.getAllCategoriesNames().contains(category.getName())) {
-            model.addAttribute("nameAlreadyExistError", "Дана категорія вже існує");
+            model.addAttribute(
+                    "nameAlreadyExistError",
+                    "Дана категорія вже існує.");
             return "category/new-update-category";
         }
 
         categoryService.createCategory(category);
 
-        redirectAttributes.addFlashAttribute("successCategorySubmitMessage", "Категорію додано");
+        redirectAttributes.addFlashAttribute(
+                "successCategorySubmitMessage",
+                "Категорію додано.");
         return "redirect:/categories";
     }
 
@@ -69,7 +73,9 @@ public class CategoryController {
             model.addAttribute("category", category.get());
             model.addAttribute("updateCategory", true);
         } else {
-            redirectAttributes.addFlashAttribute("failureCategoryMessage", "Сталась помилка, спробуйте пізніше");
+            redirectAttributes.addFlashAttribute(
+                    "failureCategoryMessage",
+                    "Сталась помилка, спробуйте пізніше.");
             return "redirect:/categories";
         }
 
@@ -92,9 +98,13 @@ public class CategoryController {
         }
 
         if (categoryService.updateCategoryById(id, category)) {
-            redirectAttributes.addFlashAttribute("successCategoryUpdateMessage", "Категорію оновлено");
+            redirectAttributes.addFlashAttribute(
+                    "successCategoryUpdateMessage",
+                    "Категорію \"" + category.getName() + "\" оновлено.");
         } else {
-            redirectAttributes.addFlashAttribute("failureCategoryMessage", "Сталась помилка, спробуйте пізніше");
+            redirectAttributes.addFlashAttribute(
+                    "failureCategoryMessage",
+                    "Сталась помилка, спробуйте пізніше.");
         }
         return "redirect:/categories";
     }
@@ -107,9 +117,13 @@ public class CategoryController {
 
         if (category.isPresent()) {
             categoryService.deleteCategoryById(id);
-            redirectAttributes.addFlashAttribute("successCategoryDeleteMessage", "Категорію видалено");
+            redirectAttributes.addFlashAttribute(
+                    "successCategoryDeleteMessage",
+                    "Категорію \"" + category.get().getName() + "\" видалено.");
         } else {
-            redirectAttributes.addFlashAttribute("failureCategoryMessage", "Сталась помилка, спробуйте пізніше");
+            redirectAttributes.addFlashAttribute(
+                    "failureCategoryMessage",
+                    "Сталась помилка, спробуйте пізніше.");
         }
 
         return "redirect:/categories";

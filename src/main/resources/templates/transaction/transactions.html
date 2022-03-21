@@ -87,7 +87,7 @@
                                 class="item border-0 btn btn-danger"
                                 data-toggle="tooltip"
                                 data-placement="top"
-                                title="Видалити" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                title="Видалити" data-bs-toggle="modal" th:attr="data-bs-target=${'#staticBackdrop' + transaction.id}">
 
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                                  class="bi bi-trash-fill" viewBox="0 0 16 16">
@@ -98,12 +98,12 @@
                         </button>
 
                         <!-- Modal -->
-                        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false"
-                             tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal fade" th:id="${'staticBackdrop' + transaction.id}" data-bs-backdrop="static" data-bs-keyboard="false"
+                             tabindex="-1" th:attr="aria-labelledby=${'staticBackdropLabel' + transaction.id}" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="staticBackdropLabel">Видалення транзакції</h5>
+                                        <h5 class="modal-title" th:id="${'staticBackdropLabel' + transaction.id}">Видалення транзакції</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                 aria-label="Close"></button>
                                     </div>

@@ -66,7 +66,9 @@ public class TransactionController {
 
         transactionService.createTransaction(transaction);
 
-        redirectAttributes.addFlashAttribute("successTransactionSubmitMessage", "Транзакцію додано");
+        redirectAttributes.addFlashAttribute(
+                "successTransactionSubmitMessage",
+                "Транзакцію додано.");
         return "redirect:/transactions";
     }
 
@@ -83,7 +85,9 @@ public class TransactionController {
 
             model.addAttribute("updateTransaction", true);
         } else {
-            redirectAttributes.addFlashAttribute("failureTransactionMessage", "Сталась помилка, спробуйте пізніше");
+            redirectAttributes.addFlashAttribute(
+                    "failureTransactionMessage",
+                    "Сталась помилка, спробуйте пізніше.");
             return "redirect:/transactions";
         }
 
@@ -108,9 +112,13 @@ public class TransactionController {
         }
 
         if (transactionService.updateTransactionById(id, transaction)) {
-            redirectAttributes.addFlashAttribute("successTransactionUpdateMessage", "Транзакцію оновлено");
+            redirectAttributes.addFlashAttribute(
+                    "successTransactionUpdateMessage",
+                    "Транзакцію оновлено");
         } else {
-            redirectAttributes.addFlashAttribute("failureTransactionMessage", "Сталась помилка, спробуйте пізніше");
+            redirectAttributes.addFlashAttribute(
+                    "failureTransactionMessage",
+                    "Сталась помилка, спробуйте пізніше.");
         }
         return "redirect:/transactions";
     }
@@ -121,9 +129,13 @@ public class TransactionController {
 
         if (transaction.isPresent()) {
             transactionService.deleteTransactionById(id);
-            redirectAttributes.addFlashAttribute("successTransactionDeleteMessage", "Транзакцію видалено");
+            redirectAttributes.addFlashAttribute(
+                    "successTransactionDeleteMessage",
+                    "Транзакцію видалено");
         } else {
-            redirectAttributes.addFlashAttribute("failureTransactionMessage", "Сталась помилка, спробуйте пізніше");
+            redirectAttributes.addFlashAttribute(
+                    "failureTransactionMessage",
+                    "Сталась помилка, спробуйте пізніше.");
         }
 
         return "redirect:/transactions";
@@ -159,7 +171,9 @@ public class TransactionController {
                 model.addAttribute("totalSum", transactionService.getTotalSumBetweenDays(operationType, dateFrom, dateTo));
             }
             default -> {
-                redirectAttributes.addFlashAttribute("failureReportMessage", "Сталась помилка, спробуйте пізніше");
+                redirectAttributes.addFlashAttribute(
+                        "failureReportMessage",
+                        "Сталась помилка, спробуйте пізніше.");
                 return "redirect:/transactions/report";
             }
         }
