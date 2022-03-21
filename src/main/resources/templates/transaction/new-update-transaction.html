@@ -27,14 +27,16 @@
     <div class="card mb-3">
         <div class="card-body">
 
-            <form  class="needs-validation" action="#"
-                   th:action="${updateTransaction} ? ('/transactions/' + ${transaction.id} + '/update') : '/transactions/new'"
-                   th:object="${transaction}"
-                   th:method="${updateTransaction} ? 'put' : 'post'">
+            <form class="needs-validation" action="#"
+                  th:action="${updateTransaction} ? ('/transactions/' + ${transaction.id} + '/update') : '/transactions/new'"
+                  th:object="${transaction}"
+                  th:method="${updateTransaction} ? 'put' : 'post'">
 
                 <div class="mb-3">
                     <label for="inputCategoryName" class="form-label">Назва категорії</label>
-                    <select th:field="*{category}" th:class="${(#fields.hasErrors('category') ? 'is-invalid ' : '') + 'form-control'}" id="inputCategoryName" aria-describedby="categoryNameError">
+                    <select th:field="*{category}"
+                            th:class="${(#fields.hasErrors('category') ? 'is-invalid ' : '') + 'form-control'}"
+                            id="inputCategoryName" aria-describedby="categoryNameError">
                         <option value="" disabled selected hidden>Виберіть категорію</option>
                         <option th:each="c : ${categories}" th:name="${c.name}"
                                 th:value="${c.id}" th:utext="${c.name}"></option>
@@ -46,7 +48,9 @@
 
                 <div class="mb-3">
                     <label for="inputOperationType" class="form-label">Тип операції</label>
-                    <select th:field="*{operationType}" th:class="${(#fields.hasErrors('operationType') ? 'is-invalid ' : '') + 'form-control'}" id="inputOperationType" aria-describedby="operationTypeError">
+                    <select th:field="*{operationType}"
+                            th:class="${(#fields.hasErrors('operationType') ? 'is-invalid ' : '') + 'form-control'}"
+                            id="inputOperationType" aria-describedby="operationTypeError">
                         <option value="" disabled selected hidden>Виберіть тип операції</option>
                         <option th:each="ot : ${operationTypes}" th:name="${ot}"
                                 th:value="${ot}" th:utext="${ot.name}"></option>
@@ -59,7 +63,9 @@
 
                 <div class="mb-3">
                     <label for="inputTransactionSum" class="form-label">Сума</label>
-                    <input type="number" min="0" step="0.01" th:class="${(#fields.hasErrors('sum') ? 'is-invalid ' : '') + 'form-control'}" id="inputTransactionSum" aria-describedby="sumError" placeholder="Введіть суму транзакції"
+                    <input type="number" min="0" step="0.01"
+                           th:class="${(#fields.hasErrors('sum') ? 'is-invalid ' : '') + 'form-control'}"
+                           id="inputTransactionSum" aria-describedby="sumError" placeholder="Введіть суму транзакції"
                            th:field="*{sum}">
                     <div class="invalid-feedback" id="sumError" th:errors="*{sum}">
                         Error sum
@@ -68,7 +74,10 @@
 
                 <div class="mb-3">
                     <label for="inputTransactionDescription" class="form-label">Короткий опис</label>
-                    <input type="text" th:class="${(#fields.hasErrors('description') ? 'is-invalid ' : '') + 'form-control'}" id="inputTransactionDescription" aria-describedby="transactionDescriptionError" placeholder="Введіть короткий опис транзакції"
+                    <input type="text"
+                           th:class="${(#fields.hasErrors('description') ? 'is-invalid ' : '') + 'form-control'}"
+                           id="inputTransactionDescription" aria-describedby="transactionDescriptionError"
+                           placeholder="Введіть короткий опис транзакції"
                            th:field="*{description}">
                     <div class="invalid-feedback" id="transactionDescriptionError" th:errors="*{description}">
                         Error description
@@ -77,25 +86,34 @@
 
                 <div class="mb-3">
                     <label for="inputTransactionDate" class="form-label">Дата</label>
-                    <input type="date" th:class="${(#fields.hasErrors('date') ? 'is-invalid ' : '') + 'form-control'}" id="inputTransactionDate" aria-describedby="transactionDateError" placeholder="Введіть дату транзакції"
+                    <input type="date" th:class="${(#fields.hasErrors('date') ? 'is-invalid ' : '') + 'form-control'}"
+                           id="inputTransactionDate" aria-describedby="transactionDateError"
+                           placeholder="Введіть дату транзакції"
                            th:field="*{date}">
                     <div class="invalid-feedback" id="transactionDateError" th:errors="*{date}">
                         Error date
                     </div>
                 </div>
 
-                <button type="button" class="btn btn-primary px-3" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Зберегти</button>
+                <button type="button" class="btn btn-primary px-3" data-bs-toggle="modal"
+                        data-bs-target="#staticBackdrop">Зберегти
+                </button>
                 <button type="reset" class="btn btn-danger px-3">Очистити</button>
 
                 <!-- Modal -->
-                <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false"
+                     tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="staticBackdropLabel">Збереження/Оновлення транзакції</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                <h5 class="modal-title" id="staticBackdropLabel"
+                                    th:text="(${updateTransaction} ? 'Оновлення' : 'Збереження') + ' транзакції'">
+                                    Збереження/Оновлення транзакції</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
                             </div>
-                            <div class="modal-body">
+                            <div class="modal-body"
+                                 th:text="'Ви справді хочете ' + (${updateTransaction} ? 'оновити' : 'зберегти') + ' транзакцію?'">
                                 Ви справді хочете зберегти/оновити транзакцію?
                             </div>
                             <div class="modal-footer">

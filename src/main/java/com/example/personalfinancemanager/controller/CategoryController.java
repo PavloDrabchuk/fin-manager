@@ -59,7 +59,7 @@ public class CategoryController {
 
         redirectAttributes.addFlashAttribute(
                 "successCategorySubmitMessage",
-                "Категорію додано.");
+                "Категорію \"" + category.getName() + "\" додано.");
         return "redirect:/categories";
     }
 

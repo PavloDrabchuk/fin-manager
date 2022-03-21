@@ -67,11 +67,14 @@
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="staticBackdropLabel">Збереження/Оновлення категорії</h5>
+                                <h5 class="modal-title" id="staticBackdropLabel"
+                                    th:text="(${updateCategory} ? 'Оновлення' : 'Збереження') + ' категорії'">
+                                    Збереження/Оновлення категорії</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                         aria-label="Close"></button>
                             </div>
-                            <div class="modal-body">
+                            <div class="modal-body"
+                                 th:text="'Ви справді хочете ' + (${updateCategory} ? 'оновити' : 'зберегти') + ' категорію?'">
                                 Ви справді хочете зберегти/оновити категорію?
                             </div>
                             <div class="modal-footer">
