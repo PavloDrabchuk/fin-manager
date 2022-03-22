@@ -6,20 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CategoryTest {
-//    private final Category category = new Category("Одяг", "Опис категорії \"Одяг\"");
-//    private final Category category2 = new Category("Харчування", "Опис категорії \"Харчування\"");
 
-    /*@Test
-    void getAllCategories(){
-        List<Category> categories = List.of(new Category("name1","desc1"), new Category("name2","desc2"));
-
-        categoryRepository.saveAll(categories);
-
-        when(categoryRepository.findAll()).thenReturn(categories);
-        //categoryService.getAllCategories();
-    }*/
     @Test
-    void assertCategoryConstructor() {
+    void testCategoryConstructor() {
         Category category = new Category("Одяг", "Опис категорії \"Одяг\"");
 
         assertAll("category",
@@ -29,7 +18,7 @@ public class CategoryTest {
     }
 
     @Test
-    void assertCategoryDefaultConstructor() {
+    void testCategoryDefaultConstructor() {
         Category category = new Category();
 
         category.setId(1L);

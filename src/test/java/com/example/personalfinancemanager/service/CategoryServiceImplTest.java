@@ -1,4 +1,4 @@
-package com.example.personalfinancemanager;
+package com.example.personalfinancemanager.service;
 
 import com.example.personalfinancemanager.model.Category;
 import com.example.personalfinancemanager.repository.CategoryRepository;
@@ -124,7 +124,7 @@ public class CategoryServiceImplTest {
     void testFailedUpdateCategoryById() {
         Category newCategory = new Category("Одяг_upd", "Опис категорії \"Одяг\"_upd");
 
-        boolean updateAnswer = categoryService.updateCategoryById(3L, newCategory);
+        boolean updateAnswer = categoryService.updateCategoryById(2L, newCategory);
 
         assertFalse(updateAnswer);
     }
@@ -158,12 +158,8 @@ public class CategoryServiceImplTest {
 
     @Test
     void testGetAllCategoriesNames() {
-        List<Category> categories = new ArrayList<>();
         Category category1 = new Category("Одяг", "Опис категорії \"Одяг\"");
         Category category2 = new Category("Харчування", "Опис категорії \"Харчування\"");
-
-        categories.add(category1);
-        categories.add(category2);
 
         List<String> categoriesNames = new ArrayList<>();
         categoriesNames.add("Одяг");

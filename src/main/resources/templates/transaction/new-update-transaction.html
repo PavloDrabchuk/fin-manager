@@ -23,7 +23,23 @@
 <h3 th:text="(${updateTransaction} ? 'Оновлення' : 'Створення') + ' інформації транзакції'"
     class="my-3 text-center">Оновлення/Створення інформаціії про транзакцію</h3>
 
-<div class="col-lg-8 offset-lg-2 col-md-10 offset-md-1 mb-3">
+<div th:if="${#lists.isEmpty(categories)}" class="p-4">
+        <div class="col-xl-8 offset-xl-2 col-lg-10 offset-lg-1 col-md-8 offset-md-2 col-sm-12 mb-3">
+            <div class="alert alert-success" role="alert">
+                <h4 class="alert-heading text-center">Немає категорій</h4>
+                <p class="text-center">
+                    Зараз не знайдено жодної категорії. Додайте категорію, щоб зберігати транзакції.
+                </p>
+                <hr>
+                <p class="mb-0 text-center">
+                    <a th:href="@{/categories/new}" class="alert-link">Додати категорію</a>
+                </p>
+            </div>
+        </div>
+</div>
+
+<div th:if="${not #lists.isEmpty(categories)}"
+     class="col-lg-8 offset-lg-2 col-md-10 offset-md-1 mb-3">
     <div class="card mb-3">
         <div class="card-body">
 
