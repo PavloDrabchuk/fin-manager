@@ -8,6 +8,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -18,12 +20,10 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class CategoryServiceImplTest {
 
     @InjectMocks
@@ -36,7 +36,7 @@ public class CategoryServiceImplTest {
     void testCreateOrSaveCategory() {
         Category category = new Category("Харчування", "Опис категорії \"Харчування\"");
 
-        categoryService.createCategory(category);
+        assertTrue(categoryService.createCategory(category));
 
         verify(categoryRepository, times(1)).save(category);
     }
@@ -107,13 +107,13 @@ public class CategoryServiceImplTest {
 
         when(categoryRepository.findById(1L)).thenReturn(category);
 
-        boolean updateAnswer = categoryService.updateCategoryById(1L, newCategory);
+        int updateAnswer = categoryService.updateCategoryById(1L, newCategory);
 
         Optional<Category> updatedCategory = categoryService.getCategoryById(1L);
 
 
         updatedCategory.ifPresent(value -> assertAll("updatedCategory",
-                () -> assertTrue(updateAnswer),
+                () -> assertEquals(1, updateAnswer),
                 () -> assertEquals("Одяг_upd", value.getName()),
                 () -> assertEquals("Опис категорії \"Одяг\"_upd", value.getDescription())
         ));
@@ -124,9 +124,9 @@ public class CategoryServiceImplTest {
     void testFailedUpdateCategoryById() {
         Category newCategory = new Category("Одяг_upd", "Опис категорії \"Одяг\"_upd");
 
-        boolean updateAnswer = categoryService.updateCategoryById(2L, newCategory);
+        int updateAnswer = categoryService.updateCategoryById(2L, newCategory);
 
-        assertFalse(updateAnswer);
+        assertEquals(0, updateAnswer);
     }
 
     @Test

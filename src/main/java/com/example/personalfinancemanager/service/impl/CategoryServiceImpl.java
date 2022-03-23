@@ -9,8 +9,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -24,8 +24,13 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public void createCategory(Category category) {
-        categoryRepository.save(category);
+    public boolean createCategory(Category category) {
+
+        if (!categoryRepository.findAllNames().contains(category.getName())) {
+            categoryRepository.save(category);
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -46,17 +51,23 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public boolean updateCategoryById(long id, Category newCategory) {
+    public int updateCategoryById(long id, Category newCategory) {
         Optional<Category> category = categoryRepository.findById(id);
+
+        if (getAllCategoriesNames().contains(newCategory.getName())
+                && category.isPresent()
+                && !Objects.equals(category.get().getName(), newCategory.getName())) {
+            return 2;
+        }
 
         if (category.isPresent()) {
             category.get().setName(newCategory.getName());
             category.get().setDescription(newCategory.getDescription());
 
             categoryRepository.save(category.get());
-            return true;
+            return 1;
         }
-        return false;
+        return 0;
     }
 
     @Override
