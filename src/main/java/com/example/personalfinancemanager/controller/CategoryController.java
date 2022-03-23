@@ -1,7 +1,6 @@
 package com.example.personalfinancemanager.controller;
 
 import com.example.personalfinancemanager.model.Category;
-import com.example.personalfinancemanager.model.Transaction;
 import com.example.personalfinancemanager.service.impl.CategoryServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -46,7 +45,7 @@ public class CategoryController {
     }
 
     @PostMapping(path = "/new")
-    public String categorySubmit(@Valid @ModelAttribute Category category,
+    public String categorySubmit(@Valid @ModelAttribute("category") Category category,
                                  BindingResult bindingResult,
                                  RedirectAttributes redirectAttributes,
                                  Model model) {
@@ -55,7 +54,7 @@ public class CategoryController {
             return "category/new-update-category";
         }
 
-        if (categoryService.getAllCategoriesNames().contains(category.getName())) {
+        if (!categoryService.createCategory(category)) {
             model.addAttribute(
                     "nameAlreadyExistError",
                     "Дана категорія вже існує.");
@@ -92,10 +91,9 @@ public class CategoryController {
     @PutMapping(path = "{id}/update")
     public String updateCategory(@PathVariable("id") Long id,
                                  Model model,
-                                 @Valid @ModelAttribute Category category,
+                                 @Valid @ModelAttribute("category") Category category,
                                  BindingResult bindingResult,
                                  RedirectAttributes redirectAttributes) {
-
 
         if (bindingResult.hasErrors()) {
             category.setId(id);
@@ -104,15 +102,28 @@ public class CategoryController {
             return "category/new-update-category";
         }
 
-        if (categoryService.updateCategoryById(id, category)) {
-            redirectAttributes.addFlashAttribute(
-                    "successCategoryUpdateMessage",
-                    "Категорію \"" + category.getName() + "\" оновлено.");
-        } else {
-            redirectAttributes.addFlashAttribute(
-                    "failureCategoryMessage",
-                    "Сталась помилка, спробуйте пізніше.");
+        switch (categoryService.updateCategoryById(id, category)) {
+            case 1 -> {
+                redirectAttributes.addFlashAttribute(
+                        "successCategoryUpdateMessage",
+                        "Категорію \"" + category.getName() + "\" оновлено.");
+            }
+            case 2 -> {
+                category.setId(id);
+                model.addAttribute("category", category);
+                model.addAttribute("updateCategory", true);
+                model.addAttribute(
+                        "nameAlreadyExistError",
+                        "Дана категорія вже існує.");
+                return "category/new-update-category";
+            }
+            default -> {
+                redirectAttributes.addFlashAttribute(
+                        "failureCategoryMessage",
+                        "Сталась помилка, спробуйте пізніше.");
+            }
         }
+
         return "redirect:/categories";
     }
 

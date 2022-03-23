@@ -1,7 +1,5 @@
 package com.example.personalfinancemanager.controller;
 
-import com.example.personalfinancemanager.dto.ReportByCategoriesDTO;
-import com.example.personalfinancemanager.dto.ReportDayByDayDTO;
 import com.example.personalfinancemanager.enums.OperationType;
 import com.example.personalfinancemanager.model.Transaction;
 import com.example.personalfinancemanager.service.impl.CategoryServiceImpl;
@@ -10,16 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
-import java.awt.print.Pageable;
 import java.text.ParseException;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -121,7 +116,7 @@ public class TransactionController {
         if (transactionService.updateTransactionById(id, transaction)) {
             redirectAttributes.addFlashAttribute(
                     "successTransactionUpdateMessage",
-                    "Транзакцію оновлено");
+                    "Транзакцію оновлено.");
         } else {
             redirectAttributes.addFlashAttribute(
                     "failureTransactionMessage",
@@ -138,7 +133,7 @@ public class TransactionController {
             transactionService.deleteTransactionById(id);
             redirectAttributes.addFlashAttribute(
                     "successTransactionDeleteMessage",
-                    "Транзакцію видалено");
+                    "Транзакцію видалено.");
         } else {
             redirectAttributes.addFlashAttribute(
                     "failureTransactionMessage",
@@ -157,8 +152,8 @@ public class TransactionController {
     }
 
     @PostMapping(path = "report/view")
-    public String generateReport(ModelMap model,
-                                 @RequestParam(defaultValue = "ByDate") String reportType,
+    public String generateReport(Model model,
+                                 @RequestParam(defaultValue = "ByDay") String reportType,
                                  @RequestParam(defaultValue = "2020-01-01") String dateFrom,
                                  @RequestParam(defaultValue = "2025-01-01") String dateTo,
                                  @RequestParam OperationType operationType,

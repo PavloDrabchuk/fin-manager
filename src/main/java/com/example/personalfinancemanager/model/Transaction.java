@@ -21,11 +21,11 @@ public class Transaction {
 
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @NotNull
+    @NotNull(message = "Оберіть категорію")
     private Category category;
 
     @Column(nullable = false)
-    @NotNull
+    @NotNull(message = "Оберіть тип операції")
     private OperationType operationType;
 
     @Column(nullable = false)
