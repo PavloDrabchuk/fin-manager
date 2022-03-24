@@ -34,10 +34,9 @@ for (let i = 0; i < 12; i++) {
     outputData.push(monthData[i])
 }
 
-console.log(outputData);
+//console.log(outputData);
 
 // chart
-
 google.charts.load('current', {'packages': ['corechart']});
 google.charts.setOnLoadCallback(drawVisualization);
 

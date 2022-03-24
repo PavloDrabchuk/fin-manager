@@ -4,7 +4,6 @@ import com.example.personalfinancemanager.dto.ReportByCategoriesDTO;
 import com.example.personalfinancemanager.dto.ReportCostDynamicsForCategoryDTO;
 import com.example.personalfinancemanager.dto.ReportDayByDayDTO;
 import com.example.personalfinancemanager.enums.OperationType;
-import com.example.personalfinancemanager.model.Category;
 import com.example.personalfinancemanager.model.Transaction;
 import com.example.personalfinancemanager.repository.TransactionRepository;
 import com.example.personalfinancemanager.service.TransactionService;
@@ -16,7 +15,8 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Month;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -97,7 +97,21 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public List<ReportCostDynamicsForCategoryDTO> generateCostDynamicsReportForCategory(Long categoryId, OperationType operationType, String dateFrom, String dateTo) throws ParseException {
-        return transactionRepository.totalSumByMonthForCategory(categoryId,operationType.ordinal(),formatter.parse(dateFrom),formatter.parse(dateTo));
+    public List<Integer> getYearsBetweenTwoDays(Long categoryId, OperationType operationType, String dateFrom, String dateTo) throws ParseException {
+        return transactionRepository.getYearsBetweenDates(categoryId, operationType.ordinal(), formatter.parse(dateFrom), formatter.parse(dateTo));
     }
+
+    @Override
+    public List<ReportCostDynamicsForCategoryDTO> generateCostDynamicsReportForCategory(Long categoryId, OperationType operationType, String dateFrom, String dateTo) throws ParseException {
+
+        List<Integer> years = getYearsBetweenTwoDays(categoryId, operationType, dateFrom, dateTo);
+        List<ReportCostDynamicsForCategoryDTO> resultList = new ArrayList<>();
+
+        for (Integer year : years) {
+            resultList.addAll(transactionRepository.totalSumByMonthForCategory(categoryId, operationType.ordinal(), year));
+        }
+
+        return resultList;
+    }
+
 }

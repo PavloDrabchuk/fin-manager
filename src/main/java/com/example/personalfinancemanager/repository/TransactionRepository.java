@@ -31,16 +31,23 @@ public interface TransactionRepository extends PagingAndSortingRepository<Transa
     @Query("select sum(t.sum) from Transaction t where t.operationType=?1 and t.date between ?2 and ?3")
     Double totalSumBetweenDays(OperationType operationType, Date from, Date to);
 
+    @Query(value = "select distinct extract(year from t.date) as `year` from Transaction t " +
+            "where t.category_id = ?1 and t.operation_type = ?2 " +
+            "and t.date between ?3 and ?4 " +
+            "order by t.date",
+            nativeQuery = true)
+    List<Integer> getYearsBetweenDates(Long id,
+                                       Integer operationType,
+                                       Date from,
+                                       Date to);
 
     @Query(value = "select extract(year from t.date) as `year`, extract(month from t.date) as `month`, sum(t.sum) as `totalSum` from Transaction t " +
             "where t.category_id = ?1 and t.operation_type = ?2 " +
-            "and extract(year from t.date) in (select distinct extract(year from t1.date) from Transaction t1) " +
-            "and t.date between ?3 and ?4 " +
+            "and extract(year from t.date) = ?3 " +
             "group by extract( month from t.date) " +
             "order by t.date",
             nativeQuery = true)
     List<ReportCostDynamicsForCategoryDTO> totalSumByMonthForCategory(Long id,
                                                                       Integer operationType,
-                                                                      Date from,
-                                                                      Date to);
+                                                                      Integer year);
 }
