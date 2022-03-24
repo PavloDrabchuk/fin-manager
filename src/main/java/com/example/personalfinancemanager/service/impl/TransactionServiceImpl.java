@@ -1,6 +1,7 @@
 package com.example.personalfinancemanager.service.impl;
 
 import com.example.personalfinancemanager.dto.ReportByCategoriesDTO;
+import com.example.personalfinancemanager.dto.ReportCostDynamicsForCategoryDTO;
 import com.example.personalfinancemanager.dto.ReportDayByDayDTO;
 import com.example.personalfinancemanager.enums.OperationType;
 import com.example.personalfinancemanager.model.Transaction;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -92,4 +94,28 @@ public class TransactionServiceImpl implements TransactionService {
     public Double getTotalSumBetweenDays(OperationType operationType, String from, String to) throws ParseException {
         return transactionRepository.totalSumBetweenDays(operationType, formatter.parse(from), formatter.parse(to));
     }
+
+    @Override
+    public List<Integer> getYearsBetweenTwoDates(Long categoryId, OperationType operationType, String dateFrom, String dateTo) throws ParseException {
+        return transactionRepository.getYearsBetweenDates(categoryId, operationType.ordinal(), formatter.parse(dateFrom), formatter.parse(dateTo));
+    }
+
+    @Override
+    public List<ReportCostDynamicsForCategoryDTO> getTotalSumByMonthForCategory(Long categoryId, OperationType operationType, Integer year) {
+        return transactionRepository.totalSumByMonthForCategory(categoryId, operationType.ordinal(), year);
+    }
+
+    @Override
+    public List<ReportCostDynamicsForCategoryDTO> generateCostDynamicsReportForCategory(Long categoryId, OperationType operationType, String dateFrom, String dateTo) throws ParseException {
+
+        List<Integer> years = getYearsBetweenTwoDates(categoryId, operationType, dateFrom, dateTo);
+        List<ReportCostDynamicsForCategoryDTO> resultList = new ArrayList<>();
+
+        for (Integer year : years) {
+            resultList.addAll(getTotalSumByMonthForCategory(categoryId, operationType, year));
+        }
+
+        return resultList;
+    }
+
 }

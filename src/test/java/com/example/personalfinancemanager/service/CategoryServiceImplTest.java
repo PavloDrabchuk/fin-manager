@@ -42,6 +42,19 @@ public class CategoryServiceImplTest {
     }
 
     @Test
+    void testFailedCreateOrSaveCategory() {
+        Category category = new Category("Одяг", "Опис категорії \"Одяг\"");
+
+        when(categoryRepository.findAllNames()).thenReturn(List.of("Одяг"));
+
+        assertTrue(categoryService.getAllCategoriesNames().contains("Одяг"));
+
+        assertFalse(categoryService.createCategory(new Category("Одяг", "Опис категорії \"Одяг\"")));
+
+        verify(categoryRepository, times(2)).findAllNames();
+    }
+
+    @Test
     void testGetAllCategories() {
         List<Category> categories = new ArrayList<>();
         Category category1 = new Category("Одяг", "Опис категорії \"Одяг\"");
@@ -117,6 +130,7 @@ public class CategoryServiceImplTest {
                 () -> assertEquals("Одяг_upd", value.getName()),
                 () -> assertEquals("Опис категорії \"Одяг\"_upd", value.getDescription())
         ));
+
         verify(categoryRepository, times(2)).findById(1L);
     }
 
@@ -127,6 +141,24 @@ public class CategoryServiceImplTest {
         int updateAnswer = categoryService.updateCategoryById(2L, newCategory);
 
         assertEquals(0, updateAnswer);
+    }
+
+    @Test
+    void testFailedUpdateCategoryByIdWithDuplicateName() {
+        Category category = new Category("Одяг", "Опис категорії \"Одяг\"");
+        Category category1 = new Category("Одяг123", "Опис категорії \"Одяг\"");
+        Category newCategory = new Category("Одяг", "Опис категорії \"Одяг\"_upd");
+
+        when(categoryRepository.findById(2L)).thenReturn(Optional.of(category1));
+        when(categoryRepository.findAllNames()).thenReturn(List.of("Одяг"));
+
+        assertTrue(categoryService.getAllCategoriesNames().contains("Одяг"));
+
+        int updateAnswer = categoryService.updateCategoryById(2L, new Category("Одяг", "Опис категорії \"Одяг\"_upd"));
+        assertEquals(2, updateAnswer);
+
+        verify(categoryRepository, times(1)).findById(2L);
+        verify(categoryRepository, times(2)).findAllNames();
     }
 
     @Test

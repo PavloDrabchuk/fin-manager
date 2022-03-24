@@ -1,5 +1,6 @@
 package com.example.personalfinancemanager.controller;
 
+import com.example.personalfinancemanager.dto.ReportCostDynamicsForCategoryDTO;
 import com.example.personalfinancemanager.enums.OperationType;
 import com.example.personalfinancemanager.model.Category;
 import com.example.personalfinancemanager.model.Transaction;
@@ -11,6 +12,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
@@ -30,6 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.hamcrest.Matchers.*;
 
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class TransactionControllerTest {
 
     private MockMvc mockMvc;
@@ -376,6 +380,78 @@ public class TransactionControllerTest {
                 .andExpect(model().attribute("operationType", is(operationType)))
                 .andExpect(model().attribute("reportByCategories", is(transactionService.generateReportByCategories(operationType, dateFrom, dateTo))))
                 .andExpect(model().attribute("totalSum", is(transactionService.getTotalSumBetweenDays(operationType, dateFrom, dateTo))));
+    }
+
+    @Test
+    void testGenerateCostDynamicsReport() throws Exception {
+
+        Optional<Category> category = Optional.of(new Category("Одяг", "Опис категорії \"Одяг\""));
+
+        when(categoryService.getCategoryById(1L)).thenReturn(category);
+
+        String reportType = "CostDynamics";
+        String dateFrom = "2017-01-01";
+        String dateTo = "2022-01-01";
+        OperationType operationType = OperationType.Revenue;
+
+        mockMvc.perform(post("/transactions/report/view")
+                        .param("reportType", reportType)
+                        .param("dateFrom", dateFrom)
+                        .param("dateTo", dateTo)
+                        .param("operationType", String.valueOf(operationType))
+                        .param("category","1")
+                )
+                .andExpect(status().isOk())
+                .andExpect(view().name("report/report"))
+                .andExpect(forwardedUrl("report/report"))
+                .andExpect(model().attribute("reportType", is(reportType)))
+                .andExpect(model().attribute("dateFrom", is(dateFrom)))
+                .andExpect(model().attribute("dateTo", is(dateTo)))
+                .andExpect(model().attribute("operationType", is(operationType)))
+                .andExpect(model().attribute("reportCostDynamicsForCategory", is(transactionService.generateCostDynamicsReportForCategory(1L,operationType, dateFrom, dateTo))))
+                .andExpect(model().attribute("category", is(category.get())));
+
+        verify(categoryService,times(1)).getCategoryById(1L);
+    }
+
+    @Test
+    void testGenerateCostDynamicsReportWithoutCategory() throws Exception {
+
+        String reportType = "CostDynamics";
+        String dateFrom = "2017-01-01";
+        String dateTo = "2022-01-01";
+        OperationType operationType = OperationType.Revenue;
+
+        mockMvc.perform(post("/transactions/report/view")
+                        .param("reportType", reportType)
+                        .param("dateFrom", dateFrom)
+                        .param("dateTo", dateTo)
+                        .param("operationType", String.valueOf(operationType))
+                        .param("category","")
+                )
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/transactions/report"))
+                .andExpect(flash().attribute("failureReportMessage", is("Оберіть категорію для формування звіту.")));
+    }
+
+    @Test
+    void testFailedGenerateCostDynamicsReport() throws Exception {
+
+        String reportType = "CostDynamics";
+        String dateFrom = "2017-01-01";
+        String dateTo = "2022-01-01";
+        OperationType operationType = OperationType.Revenue;
+
+        mockMvc.perform(post("/transactions/report/view")
+                        .param("reportType", reportType)
+                        .param("dateFrom", dateFrom)
+                        .param("dateTo", dateTo)
+                        .param("operationType", String.valueOf(operationType))
+                        .param("category","1")
+                )
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/transactions/report"))
+                .andExpect(flash().attribute("failureReportMessage", is("Сталась помилка, спробуйте пізніше.")));
     }
 
     @Test

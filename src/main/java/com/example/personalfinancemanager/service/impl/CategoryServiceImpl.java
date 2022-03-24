@@ -33,6 +33,7 @@ public class CategoryServiceImpl implements CategoryService {
         return false;
     }
 
+
     @Override
     public List<Category> getAllCategories() {
         return (List<Category>) categoryRepository.findAll();
