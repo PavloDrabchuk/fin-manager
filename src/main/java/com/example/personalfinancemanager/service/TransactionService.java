@@ -42,4 +42,5 @@ public interface TransactionService {
 
     List<ReportCostDynamicsForCategoryDTO> generateCostDynamicsReportForCategory(Long categoryId, OperationType operationType, String dateFrom, String dateTo) throws ParseException;
 
+    Page<Transaction> getAllTransactionForPageByCategory(Integer pageNo, Category category);
 }

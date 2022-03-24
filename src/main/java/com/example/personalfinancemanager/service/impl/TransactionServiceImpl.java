@@ -4,6 +4,7 @@ import com.example.personalfinancemanager.dto.ReportByCategoriesDTO;
 import com.example.personalfinancemanager.dto.ReportCostDynamicsForCategoryDTO;
 import com.example.personalfinancemanager.dto.ReportDayByDayDTO;
 import com.example.personalfinancemanager.enums.OperationType;
+import com.example.personalfinancemanager.model.Category;
 import com.example.personalfinancemanager.model.Transaction;
 import com.example.personalfinancemanager.repository.TransactionRepository;
 import com.example.personalfinancemanager.service.TransactionService;
@@ -118,4 +119,10 @@ public class TransactionServiceImpl implements TransactionService {
         return resultList;
     }
 
+    @Override
+    public Page<Transaction> getAllTransactionForPageByCategory(Integer pageNo, Category category) {
+        Pageable paging = PageRequest.of(pageNo, PAGE_SIZE_PAGINATION);
+
+        return transactionRepository.findAllByCategory(category, paging);
+    }
 }

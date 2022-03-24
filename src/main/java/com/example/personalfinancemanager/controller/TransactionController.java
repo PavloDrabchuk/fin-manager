@@ -37,14 +37,24 @@ public class TransactionController {
     @GetMapping
     public String getAllTransactions(Model model,
                                      @RequestParam(defaultValue = "0") Integer page,
-                                     @RequestParam(defaultValue = "id") String sortBy) {
+                                     @RequestParam(defaultValue = "id") String sortBy,
+                                     @RequestParam(defaultValue = "-1") String categoryId) {
         if (page < 0) page = 0;
 
-        Page<Transaction> transactionPage = transactionService.getAllTransactionsForPage(page);
+        Optional<Category> category = categoryService.getCategoryById(Long.parseLong(categoryId));
+
+        Page<Transaction> transactionPage;
+
+        transactionPage = category.isPresent()
+                ? transactionService.getAllTransactionForPageByCategory(page, category.get())
+                : transactionService.getAllTransactionsForPage(page);
+
         if (transactionPage.getTotalPages() < page) return "redirect:/transactions";
 
         model.addAttribute("transactions", transactionPage);
         model.addAttribute("page", page);
+        model.addAttribute("categories", categoryService.getAllCategories());
+        model.addAttribute("categoryId", categoryId);
 
         return "transaction/transactions";
     }

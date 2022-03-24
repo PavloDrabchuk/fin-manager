@@ -6,6 +6,8 @@ import com.example.personalfinancemanager.dto.ReportDayByDayDTO;
 import com.example.personalfinancemanager.enums.OperationType;
 import com.example.personalfinancemanager.model.Category;
 import com.example.personalfinancemanager.model.Transaction;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
@@ -50,4 +52,6 @@ public interface TransactionRepository extends PagingAndSortingRepository<Transa
     List<ReportCostDynamicsForCategoryDTO> totalSumByMonthForCategory(Long id,
                                                                       Integer operationType,
                                                                       Integer year);
+
+    Page<Transaction> findAllByCategory(Category category, Pageable pageable);
 }
