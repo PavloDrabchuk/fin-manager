@@ -36,7 +36,9 @@ public interface TransactionService {
 
     Double getTotalSumBetweenDays(OperationType operationType, String from, String to) throws ParseException;
 
-    List<Integer> getYearsBetweenTwoDays(Long categoryId, OperationType operationType, String dateFrom, String dateTo) throws ParseException;
+    List<Integer> getYearsBetweenTwoDates(Long categoryId, OperationType operationType, String dateFrom, String dateTo) throws ParseException;
+
+    List<ReportCostDynamicsForCategoryDTO> getTotalSumByMonthForCategory(Long categoryId, OperationType operationType, Integer year);
 
     List<ReportCostDynamicsForCategoryDTO> generateCostDynamicsReportForCategory(Long categoryId, OperationType operationType, String dateFrom, String dateTo) throws ParseException;
 

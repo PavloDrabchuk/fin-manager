@@ -3,7 +3,6 @@ package com.example.personalfinancemanager.service;
 import com.example.personalfinancemanager.model.Category;
 import com.example.personalfinancemanager.repository.CategoryRepository;
 import com.example.personalfinancemanager.service.impl.CategoryServiceImpl;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -33,13 +32,6 @@ public class CategoryServiceImplTest {
     @Mock
     private CategoryRepository categoryRepository;
 
-    private List<Category> categoriesEntities;
-
-    @BeforeEach
-    void init() {
-        categoriesEntities = List.of(new Category("JJJ","d"), new Category("GGG","g"));
-    }
-
     @Test
     void testCreateOrSaveCategory() {
         Category category = new Category("Харчування", "Опис категорії \"Харчування\"");
@@ -49,15 +41,18 @@ public class CategoryServiceImplTest {
         verify(categoryRepository, times(1)).save(category);
     }
 
-   /* @Test
+    @Test
     void testFailedCreateOrSaveCategory() {
-        when(categoryRepository.findAll()).thenReturn(categoriesEntities);
-        Category category = new Category("JJJ", "Опис категорії \"Харчування\"");
+        Category category = new Category("Одяг", "Опис категорії \"Одяг\"");
 
-        assertFalse(categoryService.createCategory(category));
+        when(categoryRepository.findAllNames()).thenReturn(List.of("Одяг"));
 
-        verify(categoryRepository, times(1)).save(category);
-    }*/
+        assertTrue(categoryService.getAllCategoriesNames().contains("Одяг"));
+
+        assertFalse(categoryService.createCategory(new Category("Одяг", "Опис категорії \"Одяг\"")));
+
+        verify(categoryRepository, times(2)).findAllNames();
+    }
 
     @Test
     void testGetAllCategories() {
@@ -135,6 +130,7 @@ public class CategoryServiceImplTest {
                 () -> assertEquals("Одяг_upd", value.getName()),
                 () -> assertEquals("Опис категорії \"Одяг\"_upd", value.getDescription())
         ));
+
         verify(categoryRepository, times(2)).findById(1L);
     }
 
@@ -145,6 +141,24 @@ public class CategoryServiceImplTest {
         int updateAnswer = categoryService.updateCategoryById(2L, newCategory);
 
         assertEquals(0, updateAnswer);
+    }
+
+    @Test
+    void testFailedUpdateCategoryByIdWithDuplicateName() {
+        Category category = new Category("Одяг", "Опис категорії \"Одяг\"");
+        Category category1 = new Category("Одяг123", "Опис категорії \"Одяг\"");
+        Category newCategory = new Category("Одяг", "Опис категорії \"Одяг\"_upd");
+
+        when(categoryRepository.findById(2L)).thenReturn(Optional.of(category1));
+        when(categoryRepository.findAllNames()).thenReturn(List.of("Одяг"));
+
+        assertTrue(categoryService.getAllCategoriesNames().contains("Одяг"));
+
+        int updateAnswer = categoryService.updateCategoryById(2L, new Category("Одяг", "Опис категорії \"Одяг\"_upd"));
+        assertEquals(2, updateAnswer);
+
+        verify(categoryRepository, times(1)).findById(2L);
+        verify(categoryRepository, times(2)).findAllNames();
     }
 
     @Test

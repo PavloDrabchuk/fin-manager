@@ -1,8 +1,10 @@
 package com.example.personalfinancemanager.service;
 
 import com.example.personalfinancemanager.dto.ReportByCategoriesDTO;
+import com.example.personalfinancemanager.dto.ReportCostDynamicsForCategoryDTO;
 import com.example.personalfinancemanager.dto.ReportDayByDayDTO;
 import com.example.personalfinancemanager.dto.impl.ReportByCategoriesDTOImpl;
+import com.example.personalfinancemanager.dto.impl.ReportCostDynamicsForCategoryDTOImpl;
 import com.example.personalfinancemanager.dto.impl.ReportDayByDayDTOImpl;
 import com.example.personalfinancemanager.enums.OperationType;
 import com.example.personalfinancemanager.model.Category;
@@ -14,6 +16,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -31,6 +35,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class TransactionServiceImplTest {
 
     @InjectMocks
@@ -362,4 +367,97 @@ public class TransactionServiceImplTest {
 
         verify(transactionRepository, times(1)).totalSumBetweenDays(OperationType.Revenue, from, to);
     }
+
+    @Test
+    void testGetYearsBetweenTwoDays() throws ParseException {
+
+        Transaction transaction1 = new Transaction(
+                category,
+                OperationType.Revenue,
+                123.45,
+                "Опис першої транзакції",
+                date,
+                null);
+        Transaction transaction2 = new Transaction(
+                category,
+                OperationType.Revenue,
+                678.90,
+                "Опис другої транзакції",
+                newDate,
+                null);
+
+        when(transactionRepository.getYearsBetweenDates(category.getId(), OperationType.Revenue.ordinal(), from, to)).thenReturn(List.of(2022));
+
+        List<Integer> years = transactionService.getYearsBetweenTwoDates(category.getId(), OperationType.Revenue, df.format(from), df.format(to));
+
+        assertEquals(years.size(), 1);
+
+        verify(transactionRepository, times(1)).getYearsBetweenDates(category.getId(), OperationType.Revenue.ordinal(), from, to);
+    }
+
+    @Test
+    void testGetTotalSumByMonthForCategory() throws ParseException {
+
+        Transaction transaction1 = new Transaction(
+                category,
+                OperationType.Revenue,
+                123.45,
+                "Опис першої транзакції",
+                date,
+                null);
+        Transaction transaction2 = new Transaction(
+                category,
+                OperationType.Revenue,
+                678.90,
+                "Опис другої транзакції",
+                newDate,
+                null);
+
+        List<ReportCostDynamicsForCategoryDTO> reportCostDynamicsForCategoryList = new ArrayList<>();
+        reportCostDynamicsForCategoryList.add(new ReportCostDynamicsForCategoryDTOImpl(2022, 3, 802.35));
+
+        when(transactionRepository.totalSumByMonthForCategory(1L, OperationType.Revenue.ordinal(), 2022)).thenReturn(reportCostDynamicsForCategoryList);
+
+        List<ReportCostDynamicsForCategoryDTO> list = transactionService.getTotalSumByMonthForCategory(1L, OperationType.Revenue, 2022);
+
+        assertEquals(list.size(), 1);
+
+        verify(transactionRepository, times(1)).totalSumByMonthForCategory(1L, OperationType.Revenue.ordinal(), 2022);
+    }
+
+    @Test
+    void testGenerateCostDynamicsReportForCategory() throws ParseException {
+
+        Transaction transaction1 = new Transaction(
+                category,
+                OperationType.Revenue,
+                123.45,
+                "Опис першої транзакції",
+                date,
+                null);
+        Transaction transaction2 = new Transaction(
+                category,
+                OperationType.Revenue,
+                678.90,
+                "Опис другої транзакції",
+                newDate,
+                null);
+
+        List<ReportCostDynamicsForCategoryDTO> reportCostDynamicsForCategoryList = new ArrayList<>();
+        reportCostDynamicsForCategoryList.add(new ReportCostDynamicsForCategoryDTOImpl(2022, 3, 802.35));
+
+        when(transactionRepository.totalSumByMonthForCategory(1L, OperationType.Revenue.ordinal(), 2022)).thenReturn(reportCostDynamicsForCategoryList);
+
+        List<ReportCostDynamicsForCategoryDTO> list = transactionService.generateCostDynamicsReportForCategory(1L, OperationType.Revenue, df.format(new Date(1609459200000L)), df.format(new Date(1672531200000L)));
+
+        List<ReportCostDynamicsForCategoryDTO> l = transactionService.getTotalSumByMonthForCategory(1L, OperationType.Revenue, 2022);
+
+        list.addAll(l);
+        assertEquals(1, list.size());
+
+        verify(transactionRepository, times(1)).totalSumByMonthForCategory(1L, OperationType.Revenue.ordinal(), 2022);
+
+    }
+
+
 }

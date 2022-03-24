@@ -160,8 +160,8 @@ public class TransactionController {
                                  @RequestParam(defaultValue = "ByDay") String reportType,
                                  @RequestParam(defaultValue = "2020-01-01") String dateFrom,
                                  @RequestParam(defaultValue = "2025-01-01") String dateTo,
-                                 @RequestParam(defaultValue = "") Category category,
-                                 @RequestParam OperationType operationType,
+                                 @RequestParam("operationType") OperationType operationType,
+                                 @RequestParam(name = "category", defaultValue = "") String categoryId,
                                  RedirectAttributes redirectAttributes) throws ParseException {
 
         model.addAttribute("reportType", reportType);
@@ -178,15 +178,25 @@ public class TransactionController {
                 model.addAttribute("totalSum", transactionService.getTotalSumBetweenDays(operationType, dateFrom, dateTo));
             }
             case "CostDynamics" -> {
-                if (category == null) {
+                if (categoryId.equals("")) {
                     redirectAttributes.addFlashAttribute(
                             "failureReportMessage",
                             "Оберіть категорію для формування звіту.");
                     return "redirect:/transactions/report";
                 }
-                model.addAttribute("reportCostDynamicsForCategory", transactionService.generateCostDynamicsReportForCategory(category.getId(), operationType, dateFrom, dateTo));
-                model.addAttribute("category", category);
 
+                Long id = Long.parseLong(categoryId);
+                Optional<Category> category = categoryService.getCategoryById(id);
+
+                if (category.isPresent()) {
+                    model.addAttribute("reportCostDynamicsForCategory", transactionService.generateCostDynamicsReportForCategory(id, operationType, dateFrom, dateTo));
+                    model.addAttribute("category", category.get());
+                } else {
+                    redirectAttributes.addFlashAttribute(
+                            "failureReportMessage",
+                            "Сталась помилка, спробуйте пізніше.");
+                    return "redirect:/transactions/report";
+                }
             }
             default -> {
                 redirectAttributes.addFlashAttribute(

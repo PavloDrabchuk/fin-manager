@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -97,18 +96,23 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public List<Integer> getYearsBetweenTwoDays(Long categoryId, OperationType operationType, String dateFrom, String dateTo) throws ParseException {
+    public List<Integer> getYearsBetweenTwoDates(Long categoryId, OperationType operationType, String dateFrom, String dateTo) throws ParseException {
         return transactionRepository.getYearsBetweenDates(categoryId, operationType.ordinal(), formatter.parse(dateFrom), formatter.parse(dateTo));
+    }
+
+    @Override
+    public List<ReportCostDynamicsForCategoryDTO> getTotalSumByMonthForCategory(Long categoryId, OperationType operationType, Integer year) {
+        return transactionRepository.totalSumByMonthForCategory(categoryId, operationType.ordinal(), year);
     }
 
     @Override
     public List<ReportCostDynamicsForCategoryDTO> generateCostDynamicsReportForCategory(Long categoryId, OperationType operationType, String dateFrom, String dateTo) throws ParseException {
 
-        List<Integer> years = getYearsBetweenTwoDays(categoryId, operationType, dateFrom, dateTo);
+        List<Integer> years = getYearsBetweenTwoDates(categoryId, operationType, dateFrom, dateTo);
         List<ReportCostDynamicsForCategoryDTO> resultList = new ArrayList<>();
 
         for (Integer year : years) {
-            resultList.addAll(transactionRepository.totalSumByMonthForCategory(categoryId, operationType.ordinal(), year));
+            resultList.addAll(getTotalSumByMonthForCategory(categoryId, operationType, year));
         }
 
         return resultList;
