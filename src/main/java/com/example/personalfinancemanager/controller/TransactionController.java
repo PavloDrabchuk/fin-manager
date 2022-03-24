@@ -1,6 +1,8 @@
 package com.example.personalfinancemanager.controller;
 
+import com.example.personalfinancemanager.dto.ReportCostDynamicsForCategoryDTO;
 import com.example.personalfinancemanager.enums.OperationType;
+import com.example.personalfinancemanager.model.Category;
 import com.example.personalfinancemanager.model.Transaction;
 import com.example.personalfinancemanager.service.impl.CategoryServiceImpl;
 import com.example.personalfinancemanager.service.impl.TransactionServiceImpl;
@@ -14,7 +16,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.text.ParseException;
+import java.time.Month;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -156,6 +160,7 @@ public class TransactionController {
                                  @RequestParam(defaultValue = "ByDay") String reportType,
                                  @RequestParam(defaultValue = "2020-01-01") String dateFrom,
                                  @RequestParam(defaultValue = "2025-01-01") String dateTo,
+                                 @RequestParam(defaultValue = "") Category category,
                                  @RequestParam OperationType operationType,
                                  RedirectAttributes redirectAttributes) throws ParseException {
 
@@ -171,6 +176,17 @@ public class TransactionController {
             case "ByCategories" -> {
                 model.addAttribute("reportByCategories", transactionService.generateReportByCategories(operationType, dateFrom, dateTo));
                 model.addAttribute("totalSum", transactionService.getTotalSumBetweenDays(operationType, dateFrom, dateTo));
+            }
+            case "CostDynamics" -> {
+                if (category == null) {
+                    redirectAttributes.addFlashAttribute(
+                            "failureReportMessage",
+                            "Оберіть категорію для формування звіту.");
+                    return "redirect:/transactions/report";
+                }
+                model.addAttribute("reportCostDynamicsForCategory", transactionService.generateCostDynamicsReportForCategory(category.getId(), operationType, dateFrom, dateTo));
+                model.addAttribute("category", category);
+
             }
             default -> {
                 redirectAttributes.addFlashAttribute(

@@ -1,8 +1,10 @@
 package com.example.personalfinancemanager.service.impl;
 
 import com.example.personalfinancemanager.dto.ReportByCategoriesDTO;
+import com.example.personalfinancemanager.dto.ReportCostDynamicsForCategoryDTO;
 import com.example.personalfinancemanager.dto.ReportDayByDayDTO;
 import com.example.personalfinancemanager.enums.OperationType;
+import com.example.personalfinancemanager.model.Category;
 import com.example.personalfinancemanager.model.Transaction;
 import com.example.personalfinancemanager.repository.TransactionRepository;
 import com.example.personalfinancemanager.service.TransactionService;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Month;
 import java.util.List;
 import java.util.Optional;
 
@@ -91,5 +94,10 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public Double getTotalSumBetweenDays(OperationType operationType, String from, String to) throws ParseException {
         return transactionRepository.totalSumBetweenDays(operationType, formatter.parse(from), formatter.parse(to));
+    }
+
+    @Override
+    public List<ReportCostDynamicsForCategoryDTO> generateCostDynamicsReportForCategory(Long categoryId, OperationType operationType, String dateFrom, String dateTo) throws ParseException {
+        return transactionRepository.totalSumByMonthForCategory(categoryId,operationType.ordinal(),formatter.parse(dateFrom),formatter.parse(dateTo));
     }
 }

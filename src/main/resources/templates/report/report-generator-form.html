@@ -54,7 +54,7 @@
 
                 <div class="mb-3">
                     <label for="inputCategoryName" class="form-label">Категорія</label>
-                    <select class="form-control" id="inputCategoryName" aria-describedby="categoryNameError">
+                    <select class="form-control" id="inputCategoryName" aria-describedby="categoryNameError" name="category">
                         <option value="" disabled selected hidden>Виберіть категорію</option>
                         <option th:each="c : ${categories}" th:name="${c.name}"
                                 th:value="${c.id}" th:utext="${c.name}"></option>
@@ -68,6 +68,8 @@
                 </button>
                 <button type="submit" class="btn btn-warning" value="ByDay" name="reportType" th:text="${'По днях'}">По
                     днях
+                </button>
+                <button type="submit" class="btn btn-info" value="CostDynamics" name="reportType" th:text="${'Динаміка витрат'}">Динаміка витрат
                 </button>
 
             </form>

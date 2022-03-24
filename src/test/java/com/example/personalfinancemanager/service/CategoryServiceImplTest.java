@@ -3,6 +3,7 @@ package com.example.personalfinancemanager.service;
 import com.example.personalfinancemanager.model.Category;
 import com.example.personalfinancemanager.repository.CategoryRepository;
 import com.example.personalfinancemanager.service.impl.CategoryServiceImpl;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -32,6 +33,13 @@ public class CategoryServiceImplTest {
     @Mock
     private CategoryRepository categoryRepository;
 
+    private List<Category> categoriesEntities;
+
+    @BeforeEach
+    void init() {
+        categoriesEntities = List.of(new Category("JJJ","d"), new Category("GGG","g"));
+    }
+
     @Test
     void testCreateOrSaveCategory() {
         Category category = new Category("Харчування", "Опис категорії \"Харчування\"");
@@ -40,6 +48,16 @@ public class CategoryServiceImplTest {
 
         verify(categoryRepository, times(1)).save(category);
     }
+
+   /* @Test
+    void testFailedCreateOrSaveCategory() {
+        when(categoryRepository.findAll()).thenReturn(categoriesEntities);
+        Category category = new Category("JJJ", "Опис категорії \"Харчування\"");
+
+        assertFalse(categoryService.createCategory(category));
+
+        verify(categoryRepository, times(1)).save(category);
+    }*/
 
     @Test
     void testGetAllCategories() {

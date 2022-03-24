@@ -24,9 +24,10 @@
 <div class="mx-5 my-3 text-center">
     <h3 th:text="${'Звіт за період з ' + dateFrom + ' по ' + dateTo}">Звіт за період з 2022-01-01 по 2022-02-01</h3>
     <h5 th:text="${'Тип операції для формування звіту: ' + operationType.name}">Дохід/Витрата</h5>
+    <h5 th:if="${category}" th:text="${'Категорія: ' + category.name}">Назва категорії</h5>
 </div>
 
-<div th:if="${#lists.isEmpty(reportByCategories) and #lists.isEmpty(reportDayByDay)}" class="p-4">
+<div th:if="${#lists.isEmpty(reportByCategories) and #lists.isEmpty(reportDayByDay) and #lists.isEmpty(reportCostDynamicsForCategory)}" class="p-4">
     <div class="col-xl-8 offset-xl-2 col-lg-10 offset-lg-1 col-md-8 offset-md-2 col-sm-12 mb-3">
         <div class="alert alert-success" role="alert">
             <h4 class="alert-heading text-center">Даних за обраний період не знайдено</h4>
@@ -42,7 +43,7 @@
     </div>
 </div>
 
-<div th:if="${not #lists.isEmpty(reportByCategories) or not #lists.isEmpty(reportDayByDay)}">
+<div th:if="${not #lists.isEmpty(reportByCategories) or not #lists.isEmpty(reportDayByDay) or not #lists.isEmpty(reportCostDynamicsForCategory)}">
 
     <div th:if="${reportType == 'ByCategories'}">
 
@@ -125,6 +126,25 @@
         </div>
 
     </div>
+
+    <div th:if="${reportType == 'CostDynamics'}">
+
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+            const reportCostDynamicsForCategory = /*[[${reportCostDynamicsForCategory}]]*/ [];
+            //console.log(reportCostDynamicsForCategory);
+            /*]]>*/
+        </script>
+        <script type="text/javascript" th:inline="javascript"
+                src="../../static/scripts/report-cost-dynamics-for-category.js" th:src="@{/scripts/report-cost-dynamics-for-category.js}"></script>
+
+        <div class="d-flex justify-content-center mt-5 mb-2 mx-1">
+            <div id="chart_div" style="width: 1200px; height: 500px;"></div>
+        </div>
+
+    </div>
+
+
 </div>
 
 <!-- Bootstrap Bundle with Popper -->
