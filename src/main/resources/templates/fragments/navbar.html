@@ -34,7 +34,7 @@
                     <ul class="dropdown-menu" aria-labelledby="dropdown02">
                         <li><a class="dropdown-item" th:href="@{/transactions}">Список транзакцій</a></li>
                         <li><a class="dropdown-item" th:href="@{/transactions/new}">Додати нову транзакцію</a></li>
-                        <li><a class="dropdown-item" href="#">Пошук транзакцій</a></li>
+                        <li><a class="dropdown-item" th:href="@{/}">Пошук транзакцій</a></li>
                     </ul>
                 </li>
                 <li class="nav-item dropdown">
@@ -45,7 +45,7 @@
                         <li><a class="dropdown-item" href="#">Повний операційний звіт по роках</a></li>
                     </ul>
                 </li>
-                <li class="nav-item dropdown">
+                <!--<li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-bs-toggle="dropdown"
                        aria-expanded="false">Допомога</a>
                     <ul class="dropdown-menu" aria-labelledby="dropdown04">
@@ -53,7 +53,7 @@
                         <li><a class="dropdown-item" href="#">Another action</a></li>
                         <li><a class="dropdown-item" href="#">Something else here</a></li>
                     </ul>
-                </li>
+                </li>-->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="dropdown05" data-bs-toggle="dropdown"
                        aria-expanded="false" th:text="${#httpServletRequest.remoteUser}">Username</a>

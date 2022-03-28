@@ -1,6 +1,5 @@
 package com.example.personalfinancemanager.controller;
 
-import com.example.personalfinancemanager.dto.ReportCostDynamicsForCategoryDTO;
 import com.example.personalfinancemanager.enums.OperationType;
 import com.example.personalfinancemanager.model.Category;
 import com.example.personalfinancemanager.model.Transaction;
@@ -16,9 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.text.ParseException;
-import java.time.Month;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -37,14 +34,24 @@ public class TransactionController {
     @GetMapping
     public String getAllTransactions(Model model,
                                      @RequestParam(defaultValue = "0") Integer page,
-                                     @RequestParam(defaultValue = "id") String sortBy) {
+                                     @RequestParam(defaultValue = "id") String sortBy,
+                                     @RequestParam(defaultValue = "-1") String categoryId) {
         if (page < 0) page = 0;
 
-        Page<Transaction> transactionPage = transactionService.getAllTransactionsForPage(page);
+        Optional<Category> category = categoryService.getCategoryById(Long.parseLong(categoryId));
+
+        Page<Transaction> transactionPage;
+
+        transactionPage = category.isPresent()
+                ? transactionService.getAllTransactionForPageByCategory(page, category.get())
+                : transactionService.getAllTransactionsForPage(page);
+
         if (transactionPage.getTotalPages() < page) return "redirect:/transactions";
 
         model.addAttribute("transactions", transactionPage);
         model.addAttribute("page", page);
+        model.addAttribute("categories", categoryService.getAllCategories());
+        model.addAttribute("categoryId", categoryId);
 
         return "transaction/transactions";
     }
@@ -58,7 +65,7 @@ public class TransactionController {
     }
 
     @PostMapping(path = "/new")
-    public String transactionSubmit(@Valid @ModelAttribute Transaction transaction,
+    public String transactionSubmit(@Valid @ModelAttribute("transaction") Transaction transaction,
                                     BindingResult bindingResult,
                                     Model model,
                                     RedirectAttributes redirectAttributes) {
@@ -103,7 +110,7 @@ public class TransactionController {
     @PutMapping(path = "{id}/update")
     public String updateTransaction(@PathVariable("id") Long id,
                                     Model model,
-                                    @Valid @ModelAttribute Transaction transaction,
+                                    @Valid @ModelAttribute("transaction") Transaction transaction,
                                     BindingResult bindingResult,
                                     RedirectAttributes redirectAttributes) {
 
@@ -212,4 +219,5 @@ public class TransactionController {
     public String generatedReport(Model model) {
         return "redirect:/transactions/report";
     }
+
 }

@@ -47,6 +47,25 @@
     </div>
 </div>
 
+<div class="container my-3 mx-5">
+    <form th:action="@{/transactions}">
+        <div class="row">
+            <div class="col-3">
+                <select th:class="form-control"
+                        id="inputCategoryName" aria-describedby="categoryNameError" name="categoryId">
+                    <option value="" th:selected="${categoryId == '-1'}" hidden>Фільтр за категорією</option>
+                    <option th:each="c : ${categories}" th:name="${c.name}"
+                            th:value="${c.id}" th:utext="${c.name}"
+                            th:selected="${categoryId == c.id}"></option>
+                </select>
+            </div>
+            <div class="col">
+                <input class="btn btn-primary" type="submit" value="Фільтрувати">
+            </div>
+        </div>
+    </form>
+</div>
+
 <!-- Table -->
 <div th:if="${not #lists.isEmpty(transactions.content)}" class="mx-5 my-2">
     <table class="table table-striped table-hover table-bordered">
@@ -87,7 +106,8 @@
                                 class="item border-0 btn btn-danger"
                                 data-toggle="tooltip"
                                 data-placement="top"
-                                title="Видалити" data-bs-toggle="modal" th:attr="data-bs-target=${'#staticBackdrop' + transaction.id}">
+                                title="Видалити" data-bs-toggle="modal"
+                                th:attr="data-bs-target=${'#staticBackdrop' + transaction.id}">
 
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                                  class="bi bi-trash-fill" viewBox="0 0 16 16">
@@ -98,12 +118,15 @@
                         </button>
 
                         <!-- Modal -->
-                        <div class="modal fade" th:id="${'staticBackdrop' + transaction.id}" data-bs-backdrop="static" data-bs-keyboard="false"
-                             tabindex="-1" th:attr="aria-labelledby=${'staticBackdropLabel' + transaction.id}" aria-hidden="true">
+                        <div class="modal fade" th:id="${'staticBackdrop' + transaction.id}" data-bs-backdrop="static"
+                             data-bs-keyboard="false"
+                             tabindex="-1" th:attr="aria-labelledby=${'staticBackdropLabel' + transaction.id}"
+                             aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" th:id="${'staticBackdropLabel' + transaction.id}">Видалення транзакції</h5>
+                                        <h5 class="modal-title" th:id="${'staticBackdropLabel' + transaction.id}">
+                                            Видалення транзакції</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                 aria-label="Close"></button>
                                     </div>
@@ -133,7 +156,7 @@
 <!-- Pagination -->
 
 <div th:replace="~{fragments/pagination
-        ::pagination(${transactions}, 'transactions', ${page})}"></div>
+        ::pagination(${transactions}, 'transactions', ${page}, ${categoryId})}"></div>
 
 <a th:href="@{/transactions/new}" class="btn btn-primary m-3" role="button">Додати нову транзакцію</a>
 

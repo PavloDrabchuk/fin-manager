@@ -99,6 +99,38 @@ public class TransactionControllerTest {
     }
 
     @Test
+    void testGetAllTransactionsWithCategoryFilter() throws Exception {
+        List<Transaction> transactions = new ArrayList<>();
+
+        Transaction transaction1 = new Transaction(
+                category1,
+                OperationType.Revenue,
+                123.45,
+                "Опис першої транзакції",
+                date1,
+                null);
+
+        transactions.add(transaction1);
+
+        Page<Transaction> transactionPage = new PageImpl<>(transactions);
+
+        when(categoryService.getCategoryById(1L)).thenReturn(Optional.of(category1));
+        when(transactionService.getAllTransactionForPageByCategory(0,categoryService.getCategoryById(1L).get())).thenReturn(transactionPage);
+
+        mockMvc.perform(get("/transactions")
+                        .param("categoryId","1"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("transaction/transactions"))
+                .andExpect(forwardedUrl("transaction/transactions"))
+                .andExpect(model().attribute("transactions", is(transactionPage)))
+                .andExpect(model().attribute("page", is(0)));
+
+        verify(transactionService, times(1)).getAllTransactionForPageByCategory(0, category1);
+        verify(categoryService,times(2)).getCategoryById(1L);
+        verifyNoMoreInteractions(transactionService);
+    }
+
+    @Test
     void testTransactionForm() throws Exception {
 
         mockMvc.perform(get("/transactions/new"))

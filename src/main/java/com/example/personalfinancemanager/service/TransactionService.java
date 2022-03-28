@@ -9,8 +9,6 @@ import com.example.personalfinancemanager.model.Transaction;
 import org.springframework.data.domain.Page;
 
 import java.text.ParseException;
-import java.time.Month;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,4 +40,5 @@ public interface TransactionService {
 
     List<ReportCostDynamicsForCategoryDTO> generateCostDynamicsReportForCategory(Long categoryId, OperationType operationType, String dateFrom, String dateTo) throws ParseException;
 
+    Page<Transaction> getAllTransactionForPageByCategory(Integer pageNo, Category category);
 }
