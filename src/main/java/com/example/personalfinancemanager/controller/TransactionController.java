@@ -1,6 +1,5 @@
 package com.example.personalfinancemanager.controller;
 
-import com.example.personalfinancemanager.dto.ReportCostDynamicsForCategoryDTO;
 import com.example.personalfinancemanager.enums.OperationType;
 import com.example.personalfinancemanager.model.Category;
 import com.example.personalfinancemanager.model.Transaction;
@@ -16,9 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.text.ParseException;
-import java.time.Month;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -68,7 +65,7 @@ public class TransactionController {
     }
 
     @PostMapping(path = "/new")
-    public String transactionSubmit(@Valid @ModelAttribute Transaction transaction,
+    public String transactionSubmit(@Valid @ModelAttribute("transaction") Transaction transaction,
                                     BindingResult bindingResult,
                                     Model model,
                                     RedirectAttributes redirectAttributes) {
@@ -113,7 +110,7 @@ public class TransactionController {
     @PutMapping(path = "{id}/update")
     public String updateTransaction(@PathVariable("id") Long id,
                                     Model model,
-                                    @Valid @ModelAttribute Transaction transaction,
+                                    @Valid @ModelAttribute("transaction") Transaction transaction,
                                     BindingResult bindingResult,
                                     RedirectAttributes redirectAttributes) {
 
@@ -222,4 +219,5 @@ public class TransactionController {
     public String generatedReport(Model model) {
         return "redirect:/transactions/report";
     }
+
 }

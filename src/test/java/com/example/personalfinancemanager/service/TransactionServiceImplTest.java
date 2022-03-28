@@ -104,6 +104,7 @@ public class TransactionServiceImplTest {
     @Test
     void testGetAllTransactionsForPage() {
         List<Transaction> transactions = new ArrayList<>();
+
         Transaction transaction1 = new Transaction(
                 category,
                 OperationType.Revenue,
@@ -443,21 +444,65 @@ public class TransactionServiceImplTest {
                 newDate,
                 null);
 
+        when(transactionRepository.getYearsBetweenDates(category.getId(), OperationType.Revenue.ordinal(), from, to)).thenReturn(List.of(2022));
+
         List<ReportCostDynamicsForCategoryDTO> reportCostDynamicsForCategoryList = new ArrayList<>();
         reportCostDynamicsForCategoryList.add(new ReportCostDynamicsForCategoryDTOImpl(2022, 3, 802.35));
 
-        when(transactionRepository.totalSumByMonthForCategory(1L, OperationType.Revenue.ordinal(), 2022)).thenReturn(reportCostDynamicsForCategoryList);
+        when(transactionRepository.totalSumByMonthForCategory(category.getId(), OperationType.Revenue.ordinal(), 2022)).thenReturn(reportCostDynamicsForCategoryList);
 
-        List<ReportCostDynamicsForCategoryDTO> list = transactionService.generateCostDynamicsReportForCategory(1L, OperationType.Revenue, df.format(new Date(1609459200000L)), df.format(new Date(1672531200000L)));
+        List<ReportCostDynamicsForCategoryDTO> list = transactionService.generateCostDynamicsReportForCategory(category.getId(), OperationType.Revenue, df.format(new Date(1609459200000L)), df.format(new Date(1672531200000L)));
 
-        List<ReportCostDynamicsForCategoryDTO> l = transactionService.getTotalSumByMonthForCategory(1L, OperationType.Revenue, 2022);
+        List<Integer> years = transactionService.getYearsBetweenTwoDates(category.getId(), OperationType.Revenue, df.format(from), df.format(to));
 
-        list.addAll(l);
+        assertEquals(1, years.size());
+
+        assertEquals(0, list.size());
+
+        for (Integer year : years) {
+            list.addAll(transactionService.getTotalSumByMonthForCategory(category.getId(), OperationType.Revenue, year));
+        }
         assertEquals(1, list.size());
 
-        verify(transactionRepository, times(1)).totalSumByMonthForCategory(1L, OperationType.Revenue.ordinal(), 2022);
-
+        verify(transactionRepository, times(1)).totalSumByMonthForCategory(category.getId(), OperationType.Revenue.ordinal(), 2022);
+        verify(transactionRepository, times(1)).getYearsBetweenDates(category.getId(), OperationType.Revenue.ordinal(), from, to);
     }
 
+    @Test
+    void testGetAllTransactionForPageByCategory() {
+        List<Transaction> transactions = new ArrayList<>();
 
+        Transaction transaction1 = new Transaction(
+                category,
+                OperationType.Revenue,
+                123.45,
+                "Опис першої транзакції",
+                date,
+                null);
+        Transaction transaction2 = new Transaction(
+                category,
+                OperationType.Revenue,
+                678.90,
+                "Опис другої транзакції",
+                date,
+                null);
+
+        transactions.add(transaction1);
+        transactions.add(transaction2);
+
+        Page<Transaction> transactionPage = new PageImpl<>(transactions);
+
+        Pageable paging = PageRequest.of(0, 7);
+
+        when(transactionRepository.findAllByCategory(category, paging)).thenReturn(transactionPage);
+
+        Page<Transaction> transactionsForPage = transactionService.getAllTransactionForPageByCategory(0, category);
+
+        assertAll("transactionsForPage",
+                () -> assertEquals(1, transactionsForPage.getTotalPages()),
+                () -> assertEquals(2, transactionsForPage.getTotalElements()),
+                () -> assertEquals(transactions, transactionsForPage.getContent()));
+
+        verify(transactionRepository, times(1)).findAllByCategory(category, paging);
+    }
 }

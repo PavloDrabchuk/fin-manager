@@ -23,6 +23,7 @@ import java.util.Optional;
 @Service
 public class TransactionServiceImpl implements TransactionService {
     private final TransactionRepository transactionRepository;
+
     private final Integer PAGE_SIZE_PAGINATION = 7;
     private final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
