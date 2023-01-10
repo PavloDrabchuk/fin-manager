@@ -25,6 +25,7 @@ The project implements the main necessary functions and opportunities for contro
 * **Login**
   
   To enter the system and gain access to the functionality, the user needs to go to the link: login and enter his login and password.
+  
   <p align="center">
   <img src="https://user-images.githubusercontent.com/38464535/211407008-a49bda2a-d197-451b-836f-0e842b1f9279.png" width=60%>
   </p>
@@ -32,6 +33,7 @@ The project implements the main necessary functions and opportunities for contro
 * **Logout**
   
   To log out of the system, the user needs to select: Username > Log out in the upper navigation panel.
+  
   <p align="center">
   <img src="https://user-images.githubusercontent.com/38464535/211524094-286ac302-af6c-4322-8b53-f00c3e4184ca.png" width=75%>
   </p>
@@ -46,10 +48,41 @@ The project implements the main necessary functions and opportunities for contro
     - The maximum name length is 50 characters;
     - The name must be unique.
 
-<p align="center">
+  <p align="center">
   <img src="https://user-images.githubusercontent.com/38464535/211526453-8db1f9c0-7a55-494c-8410-b8e517087ebb.png" width=92%>
   </p>
 
+* **Read categories**
+  
+  To view all categories, you need to go to the link: categories or select: Categories > List of categories in the upper navigation panel. If more than seven categories are stored in the database, a pagination mechanism appears on the page to view the categories in parts. You can select a category in the table and update or delete it.
+
+  <p align="center">
+  <img src="https://user-images.githubusercontent.com/38464535/211553870-e72659df-397f-4593-a692-5b4c8e1b362e.png" width=92%>
+  </p>
+
+* **Update a category**
+  
+  To update a category, you need to go to the link: categories/id/update, where id is the identifier of the desired category or click on the yellow "Edit" button next to the corresponding category. A form with category data appears in the open window, which can be changed if necessary. When changing a name, you should consider the restrictions that apply to it.
+
+  <p align="center">
+  <img src="https://user-images.githubusercontent.com/38464535/211554237-798584a6-8ba8-4789-b0d5-03ebf0376467.png" width=92%>
+  </p>
+  If the update is successful, a corresponding message appears on the page.
+  <p align="center">
+  <img src="https://user-images.githubusercontent.com/38464535/211554429-bdbe68b5-aede-4167-a245-35996e88009a.png" width=92%>
+  </p>
+  
+* **Delete a category**
+  
+  To delete a category, click on the red "Delete" button next to the corresponding category. Before performing the process, a window will appear on the screen asking you to confirm the deletion of the category.
+
+  <p align="center">
+  <img src="https://user-images.githubusercontent.com/38464535/211554651-05d042b4-d263-48e8-aced-a22c3596d8d1.png" width=92%>
+  </p>
+  In case of successful deletion, a corresponding message appears on the page.
+  <p align="center">
+  <img src="https://user-images.githubusercontent.com/38464535/211554667-53047439-d666-4009-afba-e038b3b997a2.png" width=92%>
+  </p>
 
 
 ### Transactions
