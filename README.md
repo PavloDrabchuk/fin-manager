@@ -139,6 +139,11 @@ The project implements the main necessary functions and opportunities for contro
 ### Report on the dynamics of expenses/revenue for the category in the year (by years)
 
 ## Testing
+  The project is 98.9% covered by tests. [JUnit 5](https://junit.org/junit5/) and [Mockito](https://site.mockito.org/) were used for testing.
+  <p align="center">
+  <img src="https://user-images.githubusercontent.com/38464535/211557905-d0e266fa-5a1e-4e72-a526-3d62a9e79b87.png" width=92%>
+  </p>
+
 
 ### Built With
 
