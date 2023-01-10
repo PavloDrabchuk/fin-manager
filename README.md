@@ -132,11 +132,74 @@ The project implements the main necessary functions and opportunities for contro
 
 ### Expense/revenue report by category
 
+* **Generating report**
+
+  To generate a report by category, you need to go to the link: transactions/report or select: Reports > Report generator in the upper navigation panel. In the open window, you need to fill in the form fields: start date, end date, type of operation and click on the green "By Categories" button.
+
+  <p align="center">
+  <img src="https://user-images.githubusercontent.com/38464535/211558864-bfadea5a-fb18-4271-932c-3804c5c63915.png" width=92%>
+  </p>
+  If the update is successful, a corresponding message appears on the page.
+  
+  <p align="center">
+  <img src="https://user-images.githubusercontent.com/38464535/211554429-bdbe68b5-aede-4167-a245-35996e88009a.png" width=92%>
+  </p>
+
+* **The obtained result**
+
+  If the database contains information about transactions for the specified period, the program will generate a report of expenses / income by category, with a table and a chart with the results.
+
+  <p align="center">
+  <img src="https://user-images.githubusercontent.com/38464535/211559615-dbdf05b6-0ea5-49ce-8f93-ef6b75d67fc3.png" width=98%>
+  </p>
+
+  If there is no information about transactions for the specified period in the database, then the corresponding message about the lack of data for generating the report will be displayed on the page.
+
+  <p align="center">
+  <img src="https://user-images.githubusercontent.com/38464535/211559647-9aa5db12-4ea9-48a7-93bc-637df5d47861.png" width=92%>
+  </p>
 
 ### Expense/revenue report by days
 
+* **Generating report**
+
+  To generate a report by category, you need to go to the link: transactions/report or select: Reports > Report generator in the upper navigation panel. In the open window, you need to fill in the form fields: start date, end date, type of operation and click on the green "By Categories" button.
+
+* **The obtained result**
+
+  If the database contains information about transactions for the specified period, then the program will generate a report of expenses / income by day, which shows the corresponding schedule.
+
+  <p align="center">
+  <img src="https://user-images.githubusercontent.com/38464535/211560375-9f4e9418-0e70-4dba-a375-5b739c133c80.png" width=92%>
+  </p>
+
+  If there is no information about transactions for the specified period in the database, then the corresponding message about the lack of data for generating the report will be displayed on the page.
 
 ### Report on the dynamics of expenses/revenue for the category in the year (by years)
+
+* **Generating report**
+
+  To generate a report on the dynamics of expenses/income, you need to go to the link: transactions/report or select: Reports > Report generator in the upper navigation panel. In the open window, you need to fill in the form fields: start date, end date, type of operation, category and click on the blue "Dynamics of expenses" button.
+
+  <p align="center">
+  <img src="https://user-images.githubusercontent.com/38464535/211561563-089ac7d8-ad56-43ac-8652-e23f69c890db.png" width=92%>
+  </p>
+  
+  If you do not select a category for this type of report, a corresponding message will appear on the page.
+  
+  <p align="center">
+  <img src="https://user-images.githubusercontent.com/38464535/211561129-0219872d-b48f-4b89-aad8-e268b84c0f4a.png" width=92%>
+  </p>
+
+* **The obtained result**
+
+  If the database contains information about transactions for the specified period, the program will generate a report of expenses / income by category, with a table and a chart with the results.
+
+  <p align="center">
+  <img src="https://user-images.githubusercontent.com/38464535/211561324-e3ee8103-62b1-4301-98c1-df0d5429cfc5.png" width=98%>
+  </p>
+
+  If there is no information about transactions for the specified period in the database, then the corresponding message about the lack of data for generating the report will be displayed on the page.
 
 ## Testing
   The project is 98.9% covered by tests. [JUnit 5](https://junit.org/junit5/) and [Mockito](https://site.mockito.org/) were used for testing.
