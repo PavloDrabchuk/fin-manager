@@ -244,6 +244,6 @@ The project implements the main necessary functions and opportunities for contro
 
 If you have a problem or question, write me: ravluk2000@gmail.com
 
-## Authors
+## Author
 
 * **Pavlo Drabchuk** - ravluk2000@gmail.com
